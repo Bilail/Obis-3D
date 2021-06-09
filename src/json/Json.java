@@ -6,12 +6,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-
+import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import Donnee.Region;
+import javafx.util.Pair;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -60,9 +64,35 @@ public class Json {
 		return new JSONObject(json);
 	}
 	
+	/*public ArrayList<Pair<Region, Integer>> nbSignalementsRegions(String nom, int precision){
+		
+		ArrayList<Pair<Region, Integer>> nbParRegions = new ArrayList<Pair<Region, Integer>>();
+		
+		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
+		
+		for(int i=0 ; i<json.getJSONArray("features").length() ; i++) {
+			
+			int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
+			
+			JSONArray coords=json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0);
+			
+			BigDecimal[] p1= { coords.getJSONArray(1).get(0), coords.getJSONArray(1).get(1)};
+			BigDecimal[] p2= { coords.getJSONArray(2).get(0), coords.getJSONArray(2).get(1)};
+			BigDecimal[] p3= { coords.getJSONArray(3).get(0), coords.getJSONArray(3).get(1)};
+			BigDecimal[] p4= { coords.getJSONArray(4).get(0), coords.getJSONArray(4).get(1)};
+			
+			Region region = new Region(p1, p2, p3, p4);
+			
+			Pair<Region, Integer> pair= new Pair<Region, Integer>(region, nb);
+			
+			nbParRegions.add(pair);
+		}
+		return nbParRegions;
+	}*/
+	
 	public static void main(String[] args) {
 		
-		try(Reader reader = new FileReader("data.json")) {
+		/*try(Reader reader = new FileReader("data.json")) {
 			
 			BufferedReader rd = new BufferedReader(reader);
 			String jsonText = readAll(rd);
@@ -77,13 +107,25 @@ public class Json {
 			JSONObject article2 = resultatRecherche.getJSONObject(1);
 			System.out.println(article2.getString("title"));
 			
-			readJsonFromUrl("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Whale&format=json");
+			
 			
 			
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
+		
+		int precision = 3;
+		String nom = "Delphinidae";
+		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
+		//JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae");
+		System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).getJSONArray(1).get(0).getClass());
+		System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("properties").getInt("n"));
+		//System.out.println(json);
+		//JSONObject json2=readJsonFromUrl("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Whale&format=json");
+		//System.out.println(json2);
+		Json jSon = new Json();
+		//System.out.println(jSon.nbSignalementsRegions("Delphinidae",3));
 	}
 	
 }

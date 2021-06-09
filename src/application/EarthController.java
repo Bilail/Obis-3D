@@ -4,6 +4,7 @@ import java.io.IOException;
 
 
 
+
 import java.io.Reader;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,9 +15,14 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import geohash.GeoHashHelper;
 import geohash.Location;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.layout.Pane;
@@ -30,20 +36,50 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
-public class Terre extends Application {
+public class EarthController{
+	
+	@FXML
+	private Pane pane3D;
+	
+	@FXML
+	private Button btnLecture;
+	
+	@FXML
+	private Button btnPause;
+	
+	@FXML
+	private Button btnStop;
+	
+	@FXML
+	private Button btnValider;
+	
+	@FXML
+	private DatePicker dateDebut;
+	
+	@FXML
+	private DatePicker dateFin;
+	
+	@FXML
+	private TextField champRecherche;
+	
+	@FXML
+	private ListView listeEspece;
+	
 
     private static final float TEXTURE_LAT_OFFSET = -0.2f;
     private static final float TEXTURE_LON_OFFSET = 2.8f;
     private static final float TEXTURE_OFFSET = 1.01f;
     
     public Group earth;
+    
 
-    @Override
-    public void start(Stage primaryStage) {
+    
+    @FXML
+    public void initialize() {
 
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
-        Pane pane3D = new Pane(root3D);
+
 
         // Load geometry
       	ObjModelImporter objImporter = new ObjModelImporter();
@@ -61,14 +97,10 @@ public class Terre extends Application {
       	earth.setId("id");
       	root3D.getChildren().add(earth);
         root3D.setFocusTraversable(true);
-      	
-        // Draw a line
 
-        // Draw an helix
-      	
 
         // Draw city on the earth
-      	displayPoint(root3D, "Brest", 48.447911f, -4.418539f);
+      	/*displayPoint(root3D, "Brest", 48.447911f, -4.418539f);
       	displayPoint(root3D, "Marseille", 43.435555f, 5.213611f);
       	displayPoint(root3D, "New York ", 40.639751f, -73.778925f);
       	displayPoint(root3D, "Cape Town", -33.964806f, 18.601667f);
@@ -91,7 +123,7 @@ public class Terre extends Application {
       	displayPoint3D(bottomLeft, root3D);
       	
 
-      	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);
+      	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);*/
       	
       	
       	
@@ -113,9 +145,11 @@ public class Terre extends Application {
         root3D.getChildren().add(ambientLight);
 
         // Create scene
-        Scene scene = new Scene(pane3D, 600, 600, false, SceneAntialiasing.BALANCED);
-        scene.setCamera(camera);
-        scene.setFill(Color.gray(0.2));
+        SubScene subscene = new SubScene(root3D, 367, 350, true, SceneAntialiasing.BALANCED);
+        subscene.setCamera(camera);
+        subscene.setFill(Color.GREY);
+        pane3D.getChildren().addAll(subscene);
+        
         
         root3D.addEventHandler(MouseEvent.ANY, event ->{
       		if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {
@@ -130,16 +164,9 @@ public class Terre extends Application {
       		}
       	});
 
-        //Add the scene to the stage and show it
-        primaryStage.setTitle("Terre");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
+
     public Group displayPoint3D(Point3D p, Group parent) {
     	
     	Sphere sphere = new Sphere(0.005);
@@ -209,8 +236,7 @@ public class Terre extends Application {
     							   geoCoordTo3dCoord(latitude, longitude).getY(),
     							   geoCoordTo3dCoord(latitude, longitude).getZ());
     	
-    	Group group=displayPoint3D(point,parent);
-    	group.setId(name);
+    	displayPoint3D(point,parent).setId(name);
     }
     
     private void AddQuadrilateral(Group parent, Point3D topRight, Point3D bottomRight, Point3D bottomLeft,
@@ -246,4 +272,6 @@ public class Terre extends Application {
     	parent.getChildren().addAll(meshView);
     	
     	}
+
+
 }

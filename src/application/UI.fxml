@@ -15,14 +15,13 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button mnemonicParsing="false" text="Lecture" />
-            <Button mnemonicParsing="false" text="Pause" />
-            <Button mnemonicParsing="false" text="Stop" />
+          <Button fx:id="btnLecture" mnemonicParsing="false" text="Lecture" />
+            <Button fx:id="btnPause" mnemonicParsing="false" text="Pause" />
+            <Button fx:id="btnStop" mnemonicParsing="false" text="Stop" />
         </items>
          <BorderPane.margin>
             <Insets />
@@ -47,7 +46,7 @@
                </font>
             </Label>
             <Label text="Nom de l'espèce" />
-            <TextField prefHeight="25.0" prefWidth="184.0">
+            <TextField fx:id="champRecherche" prefHeight="25.0" prefWidth="184.0">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
@@ -58,14 +57,14 @@
                   <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="68.0" text="Date fin " />
                </children>
             </HBox>
-            <HBox prefHeight="33.0" prefWidth="206.0">
+            <HBox fx:id="calendrier" prefHeight="33.0" prefWidth="206.0">
                <children>
-                  <DatePicker />
-                  <DatePicker />
+                  <DatePicker fx:id="dateDebut" />
+                  <DatePicker fx:id="dateFIn" />
                </children>
             </HBox>
             <Label text="Liste des epèces" />
-            <ListView prefHeight="106.0" prefWidth="206.0" />
+            <ListView fx:id="listeEspeces" prefHeight="106.0" prefWidth="206.0" />
             <Separator prefWidth="200.0" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="211.0" text="Légendes" />
             <Separator prefWidth="200.0" />
@@ -117,7 +116,7 @@
                   </VBox>
                </children>
             </HBox>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Valider">
+            <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Valider">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
@@ -132,6 +131,6 @@
       </VBox>
    </right>
    <center>
-      <Pane prefHeight="350.0" prefWidth="367.0" BorderPane.alignment="CENTER" />
+      <Pane fx:id="pane3D" prefHeight="350.0" prefWidth="367.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

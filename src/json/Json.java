@@ -3,18 +3,23 @@ package json;
 import java.io.BufferedReader;
 
 
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import Donnee.Region;
+import application.EarthController;
+import javafx.geometry.Point3D;
 import javafx.util.Pair;
 
 import java.net.URI;
@@ -64,31 +69,50 @@ public class Json {
 		return new JSONObject(json);
 	}
 	
-	/*public ArrayList<Pair<Region, Integer>> nbSignalementsRegions(String nom, int precision){
+	public static ArrayList<JSONArray> nbSignalementsRegions(String nom, int precision){
 		
-		ArrayList<Pair<Region, Integer>> nbParRegions = new ArrayList<Pair<Region, Integer>>();
+		ArrayList<JSONArray> nbParRegions = new ArrayList<JSONArray>();
 		
 		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
 		
-		for(int i=0 ; i<json.getJSONArray("features").length() ; i++) {
+		for(int i=0 ; i<200 ; i++) {
 			
 			int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
-			
+			//System.out.println(nb);
 			JSONArray coords=json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0);
-			
-			BigDecimal[] p1= { coords.getJSONArray(1).get(0), coords.getJSONArray(1).get(1)};
-			BigDecimal[] p2= { coords.getJSONArray(2).get(0), coords.getJSONArray(2).get(1)};
-			BigDecimal[] p3= { coords.getJSONArray(3).get(0), coords.getJSONArray(3).get(1)};
-			BigDecimal[] p4= { coords.getJSONArray(4).get(0), coords.getJSONArray(4).get(1)};
-			
-			Region region = new Region(p1, p2, p3, p4);
-			
-			Pair<Region, Integer> pair= new Pair<Region, Integer>(region, nb);
-			
-			nbParRegions.add(pair);
+			coords.put(0, nb);
+
+			nbParRegions.add(coords);
+
 		}
 		return nbParRegions;
-	}*/
+	}
+	
+	public static ArrayList<JSONArray> nbSignalementsRegionsDate(String nom, int precision, LocalDate depart, LocalDate arrivee){
+		
+		ArrayList<JSONArray> nbParRegions = new ArrayList<JSONArray>();
+		
+		int moisDepart= depart.getMonthValue();
+		int moisArrivee= arrivee.getMonthValue();
+		int jourDepart= depart.getDayOfMonth();
+		int jourArrivee= depart.getMonthValue();
+		
+		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom +
+				"&startdate=" + depart.getYear() + "-" + depart.getMonth() + "-" + depart.getDayOfMonth() + 
+				"&enddate=" + arrivee.getYear() + "-" + arrivee.getMonth() + "-" + arrivee.getDayOfMonth());
+		
+		for(int i=0 ; i<200 ; i++) {
+			
+			int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
+			//System.out.println(nb);
+			JSONArray coords=json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0);
+			coords.put(0, nb);
+
+			nbParRegions.add(coords);
+
+		}
+		return nbParRegions;
+	}
 	
 	public static void main(String[] args) {
 		
@@ -114,18 +138,16 @@ public class Json {
 		catch (IOException e) {
 			e.printStackTrace();
 		}*/
-		
 		int precision = 3;
 		String nom = "Delphinidae";
-		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
-		//JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae");
-		System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).getJSONArray(1).get(0).getClass());
-		System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("properties").getInt("n"));
-		//System.out.println(json);
-		//JSONObject json2=readJsonFromUrl("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Whale&format=json");
-		//System.out.println(json2);
-		Json jSon = new Json();
-		//System.out.println(jSon.nbSignalementsRegions("Delphinidae",3));
+		//JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
+		//System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0));
+		//System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("properties").getInt("n"));
+		//ArrayList<JSONArray> resultat1 = nbSignalementsRegions("Delphinidae",3);
+		//System.out.println(resultat1);
+		ArrayList<JSONArray> resultat2 = nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2018, 11, 23),LocalDate.of(2019,11,23));
+		System.out.println(resultat2);
+		
 	}
 	
 }

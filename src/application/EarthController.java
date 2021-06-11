@@ -40,7 +40,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
-public class EarthController implements Initializable {
+public class EarthController {
 	
 	@FXML
 	private Pane pane3D;
@@ -81,9 +81,7 @@ public class EarthController implements Initializable {
     public Group earth;
     
 
-    
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize() {
 
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();

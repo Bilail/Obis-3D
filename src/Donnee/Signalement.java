@@ -1,14 +1,23 @@
 package Donnee;
 
-import java.awt.Point;
-
+import javafx.geometry.Point3D;
 import sun.util.calendar.BaseCalendar.Date;
 
 public class Signalement {
-	private Espece e;
-	private Date d; 
+	
+	private String scientificName;
+	private String species;
 	private String order;
 	private String superClass;
 	private String recordBy;
-	private Point coord;
+
+	public Signalement(String scientificName, String species, String order, String superClass, String recordBy) {
+		
+		this.scientificName=scientificName;
+		this.species=species;
+		this.order=order;
+		this.superClass= superClass;
+		this.recordBy= recordBy;
+
+	}
 }

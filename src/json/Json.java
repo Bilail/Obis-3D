@@ -11,14 +11,19 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.sun.beans.introspect.PropertyInfo.Name;
+
 import Donnee.Region;
+import Donnee.Signalement;
 import application.EarthController;
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.util.Pair;
 
@@ -69,85 +74,150 @@ public class Json {
 		return new JSONObject(json);
 	}
 	
-	public static ArrayList<JSONArray> nbSignalementsRegions(String nom, int precision){
+	public static ArrayList<Pair<Integer, Region>> nbSignalementsRegions(String nom, int precision){
 		
-		ArrayList<JSONArray> nbParRegions = new ArrayList<JSONArray>();
+		ArrayList<Pair<Integer, Region>> nbParRegions = new ArrayList<Pair<Integer, Region>>();
 		
 		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
 		
-		for(int i=0 ; i<200 ; i++) {
+		for(int i=0 ; i<20 ; i++) {
 			
 			int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
-			//System.out.println(nb);
-			JSONArray coords=json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0);
-			coords.put(0, nb);
+			
+			Point2D[] coords= {null,null,null,null};
+			
+			for(int j=0; j<4; j++) {
+				
+				Point2D geoCoord = new Point2D(json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(0).floatValue(),
+									           json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(1).floatValue());
+				coords[j]=geoCoord;
+			}
+			
+			Region region = new Region(coords);
+			
+			Pair<Integer, Region> nbRegion = new Pair<Integer, Region>(nb,region);
 
-			nbParRegions.add(coords);
+			nbParRegions.add(nbRegion);
 
 		}
 		return nbParRegions;
 	}
 	
-	public static ArrayList<JSONArray> nbSignalementsRegionsDate(String nom, int precision, LocalDate depart, LocalDate arrivee){
+	public static ArrayList<Pair<Integer, Region>> nbSignalementsRegionsDate(String nom, int precision, LocalDate depart, LocalDate arrivee){
 		
-		ArrayList<JSONArray> nbParRegions = new ArrayList<JSONArray>();
-		
-		int moisDepart= depart.getMonthValue();
-		int moisArrivee= arrivee.getMonthValue();
-		int jourDepart= depart.getDayOfMonth();
-		int jourArrivee= depart.getMonthValue();
-		
+		ArrayList<Pair<Integer, Region>> nbParRegions = new ArrayList<Pair<Integer, Region>>();
+	
 		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom +
-				"&startdate=" + depart.getYear() + "-" + depart.getMonth() + "-" + depart.getDayOfMonth() + 
-				"&enddate=" + arrivee.getYear() + "-" + arrivee.getMonth() + "-" + arrivee.getDayOfMonth());
+				"&startdate=" + depart + "&enddate=" + arrivee);
 		
-		for(int i=0 ; i<200 ; i++) {
+		for(int i=0 ; i<20 ; i++) {
 			
 			int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
-			//System.out.println(nb);
-			JSONArray coords=json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0);
-			coords.put(0, nb);
+			
+			Point2D[] coords= {null,null,null,null};
+			
+			for(int j=0; j<4; j++) {
+				
+				Point2D geoCoord = new Point2D(json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(0).floatValue(),
+									           json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(1).floatValue());
+				coords[j]=geoCoord;
+			}
+			
+			Region region = new Region(coords);
+			
+			Pair<Integer, Region> nbRegion = new Pair<Integer, Region>(nb,region);
 
-			nbParRegions.add(coords);
+			nbParRegions.add(nbRegion);
 
 		}
 		return nbParRegions;
+	}
+	
+	public static ArrayList<Object[]> nbSignalementsIntervalles(String nom, int precision, LocalDate depart, int duree, int nbIntervalles) {
+		
+		ArrayList<Object[]>signalementsIntervalles= new ArrayList<Object[]>();
+		
+		for(int i=0; i<nbIntervalles; i++) {
+			
+			LocalDate arrivee= LocalDate.of(depart.getYear() + duree, depart.getMonthValue(), depart.getDayOfMonth());
+			
+			ArrayList<Pair<Integer, Region>> nbParRegions =nbSignalementsRegionsDate(nom, precision, depart, arrivee);
+			
+			Object[] signalementsIntervalle = {depart, arrivee, nbParRegions};
+			
+			signalementsIntervalles.add(signalementsIntervalle);
+			
+			depart=arrivee;
+		}
+		return signalementsIntervalles;
+	}
+	
+	public static ArrayList<Signalement> rechercherSignalements(String nom, String geohash){
+		
+		ArrayList<Signalement> signalements = new ArrayList<Signalement>();
+		
+		
+		
+		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname=" + nom +
+				"&geometry=" + geohash);
+		
+		for(int i=0; i<json.getJSONArray("results").length(); i++) {
+			
+			Signalement signalement = new Signalement(json.getJSONArray("results").getJSONObject(i).getJSONObject("scientificName").toString(),
+										  json.getJSONArray("results").getJSONObject(i).getJSONObject("order").toString(),
+										  json.getJSONArray("results").getJSONObject(i).getJSONObject("superClass").toString(),
+										  json.getJSONArray("results").getJSONObject(i).getJSONObject("recordedBy").toString(),
+										  json.getJSONArray("results").getJSONObject(i).getJSONObject("species").toString());
+			signalements.add(signalement);
+		}
+		return signalements;
+	}
+	
+	public static String[] completerNoms(String debut) {
+		
+		String[] premiersNoms= new String[20];
+		
+		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/taxon/complete/verbose/" + debut);
+		
+		for(int i =0 ; i<20; i++) {
+			
+			premiersNoms[i] =json.getJSONArray("").getJSONObject(i).getJSONObject("scientificName").toString();
+			
+		}
+		return premiersNoms;
 	}
 	
 	public static void main(String[] args) {
 		
-		/*try(Reader reader = new FileReader("data.json")) {
-			
-			BufferedReader rd = new BufferedReader(reader);
-			String jsonText = readAll(rd);
-			JSONObject jsonRoot = new JSONObject(jsonText);
-			
-			JSONArray resultatRecherche = jsonRoot.getJSONObject("query").getJSONArray("search");
-			JSONObject article = resultatRecherche.getJSONObject(0);
-			System.out.println(article.getString("title"));
-			System.out.println(article.getString("snippet"));
-			System.out.println(article.getInt("wordcount"));
-			
-			JSONObject article2 = resultatRecherche.getJSONObject(1);
-			System.out.println(article2.getString("title"));
-			
-			
-			
-			
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}*/
+		
 		int precision = 3;
 		String nom = "Delphinidae";
 		//JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
 		//System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0));
 		//System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("properties").getInt("n"));
-		//ArrayList<JSONArray> resultat1 = nbSignalementsRegions("Delphinidae",3);
-		//System.out.println(resultat1);
-		ArrayList<JSONArray> resultat2 = nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2018, 11, 23),LocalDate.of(2019,11,23));
-		System.out.println(resultat2);
 		
+		ArrayList<Pair<Integer, Region>> resultat1 = nbSignalementsRegions("Delphinidae",3);
+		System.out.println(resultat1 + "\n");
+		
+		ArrayList<Pair<Integer, Region>> resultat2 = nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2018, 9, 23),LocalDate.of(2019,9,23));
+		System.out.println(resultat2 + "\n");
+
+		ArrayList<Object[]> resultat3 = nbSignalementsIntervalles("Delphinidae",3,LocalDate.of(2008, 9, 23),2,5);
+		System.out.println(Arrays.toString(resultat3.get(0)));
+		System.out.println(Arrays.toString(resultat3.get(1)));
+		System.out.println(Arrays.toString(resultat3.get(2)));
+		System.out.println(Arrays.toString(resultat3.get(3)));
+		System.out.println(Arrays.toString(resultat3.get(4)) + "\n");
+		
+		/*ArrayList<Signalement> resultat4 = rechercherSignalements("Manta birostris", "spd");
+		System.out.println(resultat4 + "\n");*/
+		
+		String[] resultat5 = completerNoms("a");
+		System.out.println(Arrays.toString(resultat5));
 	}
 	
 }

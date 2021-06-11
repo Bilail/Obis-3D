@@ -9,13 +9,17 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.textfield.TextFields;
+
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import geohash.GeoHashHelper;
 import geohash.Location;
+import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import javafx.application.Application;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
@@ -36,7 +40,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
-public class EarthController{
+public class EarthController implements Initializable {
 	
 	@FXML
 	private Pane pane3D;
@@ -65,6 +69,10 @@ public class EarthController{
 	@FXML
 	private ListView listeEspece;
 	
+	@FXML
+	private TextField ZoneGeo;
+	
+	
 
     private static final float TEXTURE_LAT_OFFSET = -0.2f;
     private static final float TEXTURE_LON_OFFSET = 2.8f;
@@ -74,12 +82,16 @@ public class EarthController{
     
 
     
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
 
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
-
+        
+        //Auto completion 
+        String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"};
+        TextFields.bindAutoCompletion(champRecherche, NomEspece);
+        
 
         // Load geometry
       	ObjModelImporter objImporter = new ObjModelImporter();

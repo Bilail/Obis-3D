@@ -18,7 +18,8 @@ public class MainTest {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		assertEquals(2 , 1);
+		//fail("Not yet implemented");
 	}
 
 }

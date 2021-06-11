@@ -10,6 +10,8 @@ public class Signalement {
 	private String order;
 	private String superClass;
 	private String recordBy;
+	
+	// Il manque la region, un signalement ce fais dans une region donnée
 
 	public Signalement(String scientificName, String species, String order, String superClass, String recordBy) {
 		

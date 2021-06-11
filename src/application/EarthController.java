@@ -39,6 +39,7 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import Model.EarthModel;
 
 public class EarthController {
 	
@@ -87,7 +88,7 @@ public class EarthController {
         Group root3D = new Group();
         
         //Auto completion 
-        String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"};
+        String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester déja 
         TextFields.bindAutoCompletion(champRecherche, NomEspece);
         
 

@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="deps/jimObjModelImporterJFX.jar"/>
 	<classpathentry kind="lib" path="deps/json-20210307.jar"/>
 	<classpathentry kind="lib" path="C:/Users/bilai/Downloads/controlsfx-11.1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

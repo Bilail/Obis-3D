@@ -89,7 +89,7 @@ public void displayPoint(Group parent, String name, float latitude, float longit
 	displayPoint3D(point,parent).setId(name);
 }
 
-private void AddQuadrilateral(Group parent, Point3D topRight, Point3D bottomRight, Point3D bottomLeft,
+public void AddQuadrilateral(Group parent, Point3D topRight, Point3D bottomRight, Point3D bottomLeft,
 		Point3D topLeft, PhongMaterial material) {
 	
 	final TriangleMesh triangleMesh = new TriangleMesh();

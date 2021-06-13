@@ -96,7 +96,7 @@ public class EarthController {
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
         
-        Auto completion 
+        //Auto completion 
         String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester déja 
         TextFields.bindAutoCompletion(champRecherche, NomEspece);
         

@@ -5,8 +5,12 @@ import java.io.IOException;
 
 
 
+
+
 import java.io.Reader;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.TextFields;
@@ -14,10 +18,13 @@ import org.controlsfx.control.textfield.TextFields;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import Donnee.Region;
 import geohash.GeoHashHelper;
 import geohash.Location;
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -39,6 +46,8 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import json.Json;
 import Model.EarthModel;
 
 public class EarthController {
@@ -87,11 +96,45 @@ public class EarthController {
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
         
-        //Auto completion 
+        Auto completion 
         String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester déja 
         TextFields.bindAutoCompletion(champRecherche, NomEspece);
         
-
+        btnValider.setOnAction( new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {
+        		
+        		ArrayList<Pair<Integer, Region>> signalements;
+        		
+        		if(dateDebut.getValue()!=null) {
+        			
+        			if(dateFin.getValue() !=null) {
+        				
+        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), dateFin.getValue());
+        				
+        			}
+        			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), LocalDate.now());}
+        		}
+        		else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), LocalDate.now());}
+        		
+        			for (Pair<Integer,Region> pair : signalements) {
+        			
+        				final PhongMaterial material = new PhongMaterial();
+        			
+        				if(pair.getKey() <= 500) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.1));}
+        				else if(pair.getKey() <= 1000) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
+        				else if(pair.getKey() <= 2000) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+        				else if(pair.getKey() <= 4000) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+        				else if(pair.getKey() <= 8000) {material.setDiffuseColor(new Color(1, 0.5, 0.0, 0.1));}
+        				else {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+        			
+        				Region region = pair.getValue();
+        				
+        				AddQuadrilateral(root3D, region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], region.getPoints()[3], material);
+        			}
+        		}
+        });
+        
         // Load geometry
       	ObjModelImporter objImporter = new ObjModelImporter();
       	

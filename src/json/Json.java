@@ -213,11 +213,15 @@ public class Json {
 		System.out.println(Arrays.toString(resultat3.get(3)));
 		System.out.println(Arrays.toString(resultat3.get(4)) + "\n");
 		
+		System.out.println(resultat1.get(0));
+		
 		/*ArrayList<Signalement> resultat4 = rechercherSignalements("Manta birostris", "spd");
 		System.out.println(resultat4 + "\n");*/
 		
-		String[] resultat5 = completerNoms("a");
-		System.out.println(Arrays.toString(resultat5));
+		/*String[] resultat5 = completerNoms("a");
+		System.out.println(Arrays.toString(resultat5));*/
+		
+		
 	}
 	
 }

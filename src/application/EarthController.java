@@ -34,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
@@ -84,7 +85,7 @@ public class EarthController {
 	private TextField ZoneGeo;
 	
 	@FXML
-	private Label description;
+	private TextArea description;
 	
 	@FXML
 	private TextField precision;
@@ -98,6 +99,8 @@ public class EarthController {
     
 
     public void initialize() {
+    	
+    	description.setEditable(false);
 
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
@@ -143,14 +146,14 @@ public class EarthController {
         			
         				Region region = pair.getValue();
         				
-        				AddQuadrilateral(root3D, region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], region.getPoints()[3], material);
+        				AddQuadrilateral(root3D, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
         				
         			
         			}
         			StringBuilder donnee = new StringBuilder();
         			donnee.append("nbr d'occurence | point 3D \n");
         			for (Pair<Integer,Region> e : signalements) {
-        				donnee.append(e.getKey().toString() + "\n"
+        				donnee.append("\n" + e.getKey().toString() + "\n"
         				+"\t" + e.getValue().getPoints()[0] +"\n\t" + e.getValue().getPoints()[1] + 
         				"\n\t" + e.getValue().getPoints()[2]+ "\n\t" + e.getValue().getPoints()[3]);	
         			}

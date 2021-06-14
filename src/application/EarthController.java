@@ -32,6 +32,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -82,6 +83,11 @@ public class EarthController {
 	@FXML
 	private TextField ZoneGeo;
 	
+	@FXML
+	private Label description;
+	
+	@FXML
+	private TextField precision;
 	
 
     private static final float TEXTURE_LAT_OFFSET = -0.2f;
@@ -115,7 +121,7 @@ public class EarthController {
         			}
         			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), LocalDate.now());}
         		}
-        		else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), LocalDate.now());}
+        		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), 3);}
         		
         			for (Pair<Integer,Region> pair : signalements) {
         			
@@ -131,7 +137,10 @@ public class EarthController {
         				Region region = pair.getValue();
         				
         				AddQuadrilateral(root3D, region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], region.getPoints()[3], material);
+        				
+        			
         			}
+        			 description.setText(signalements.toString());
         		}
         });
         

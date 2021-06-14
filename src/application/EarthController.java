@@ -146,7 +146,7 @@ public class EarthController {
         			
         				Region region = pair.getValue();
         				
-        				AddQuadrilateral(root3D, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
+        				AddQuadrilateral(root3D, region.getPoints()[3], region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], material);
         				
         			
         			}

@@ -113,15 +113,24 @@ public class EarthController {
         Group root3D = new Group();
         
         //Auto completion 
-        champRecherche.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        champRecherche.setOnKeyReleased(new EventHandler<KeyEvent>() {
         	@Override
         	public void handle(KeyEvent event) {	
                 	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
-        			ObservableList<String> items =
-            				FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
+        			ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
             		combo.setItems(items);
         	}
         });
+        
+        combo.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {	
+                	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
+        			champRecherche.setText(combo.getSelectionModel().getSelectedItem());
+        	}
+        });
+        
+        
    
         btnValider.setOnAction( new EventHandler<ActionEvent>() {
         	@Override

@@ -15,9 +15,9 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <bottom>
-      <ToolBar prefHeight="33.0" prefWidth="621.0" BorderPane.alignment="CENTER">
+      <ToolBar prefHeight="40.0" prefWidth="640.0" BorderPane.alignment="CENTER">
         <items>
           <Button fx:id="btnLecture" mnemonicParsing="false" text="Lecture" />
             <Button fx:id="btnPause" mnemonicParsing="false" text="Pause" />
@@ -28,30 +28,13 @@
          </BorderPane.margin>
       </ToolBar>
    </bottom>
+   <center>
+      <Pane fx:id="pane3D" prefHeight="350.0" prefWidth="367.0" BorderPane.alignment="CENTER" />
+   </center>
    <right>
-      <VBox prefHeight="365.0" prefWidth="247.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="360.0" prefWidth="331.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="207.0" text="Recherche">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets right="2.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label text="Nom de l'espèce" />
-            <TextField fx:id="champRecherche" prefHeight="25.0" prefWidth="184.0">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </TextField>
-            <HBox prefHeight="21.0" prefWidth="206.0">
+            <VBox prefHeight="360.0" prefWidth="182.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="86.0" text="Date début" />
                   <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="68.0" text="Date fin " />
@@ -87,65 +70,106 @@
                <children>
                   <VBox prefHeight="72.0" prefWidth="100.0">
                      <children>
-                        <HBox prefHeight="26.0" prefWidth="100.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff231f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="24.0" prefWidth="100.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff9d1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="24.0" prefWidth="100.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e9f00e" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
+                        <Label prefHeight="17.0" prefWidth="86.0" text="Date début" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="68.0" text="Date fin " />
                      </children>
-                  </VBox>
-                  <VBox prefHeight="69.0" prefWidth="100.0">
+                  </HBox>
+                  <HBox fx:id="calendrier" prefHeight="33.0" prefWidth="206.0">
                      <children>
-                        <HBox prefHeight="26.0" prefWidth="100.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#90ff1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="24.0" prefWidth="100.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fe4ff" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="24.0" prefWidth="100.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
+                        <DatePicker fx:id="dateDebut" />
+                        <DatePicker fx:id="dateFIn" />
                      </children>
-                  </VBox>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="51.0" prefWidth="125.0">
+                           <children>
+                              <Label text="Region" />
+                              <TextField fx:id="ZoneGeo" prefHeight="25.0" prefWidth="110.0" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label text="Précision " />
+                              <TextField fx:id="precision" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Label text="Liste des epèces" />
+                  <ListView fx:id="listeEspeces" prefHeight="106.0" prefWidth="206.0" />
+                  <Separator prefWidth="200.0" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="211.0" text="Légendes" />
+                  <Separator prefWidth="200.0" />
+                  <HBox prefHeight="84.0" prefWidth="206.0">
+                     <children>
+                        <VBox prefHeight="72.0" prefWidth="100.0">
+                           <children>
+                              <HBox prefHeight="26.0" prefWidth="100.0">
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff231f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                                    <Label text="Label" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="24.0" prefWidth="100.0">
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff9d1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                                    <Label text="Label" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="24.0" prefWidth="100.0">
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e9f00e" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                                    <Label text="Label" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="69.0" prefWidth="100.0">
+                           <children>
+                              <HBox prefHeight="26.0" prefWidth="100.0">
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#90ff1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                                    <Label text="Label" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="24.0" prefWidth="100.0">
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fe4ff" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                                    <Label text="Label" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="24.0" prefWidth="100.0">
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                                    <Label text="Label" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Valider">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Button>
                </children>
-            </HBox>
-            <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Valider">
-               <VBox.margin>
+               <opaqueInsets>
                   <Insets />
-               </VBox.margin>
-            </Button>
+               </opaqueInsets>
+            </VBox>
+            <VBox prefHeight="360.0" prefWidth="149.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="152.0" text="Description ">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="description" prefHeight="354.0" prefWidth="149.0" />
+               </children>
+            </VBox>
          </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <BorderPane.margin>
-            <Insets right="10.0" />
-         </BorderPane.margin>
-      </VBox>
+      </HBox>
    </right>
-   <center>
-      <Pane fx:id="pane3D" prefHeight="350.0" prefWidth="367.0" BorderPane.alignment="CENTER" />
-   </center>
 </BorderPane>

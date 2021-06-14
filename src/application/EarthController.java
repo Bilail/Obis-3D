@@ -32,6 +32,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -82,6 +83,11 @@ public class EarthController {
 	@FXML
 	private TextField ZoneGeo;
 	
+	@FXML
+	private Label description;
+	
+	@FXML
+	private TextField precision;
 	
 
     private static final float TEXTURE_LAT_OFFSET = -0.2f;
@@ -97,7 +103,7 @@ public class EarthController {
         Group root3D = new Group();
         
         //Auto completion 
-        /*String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester déja 
+        /*String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester dï¿½ja 
         TextFields.bindAutoCompletion(champRecherche, NomEspece);*/
         
         btnValider.setOnAction( new EventHandler<ActionEvent>() {
@@ -137,8 +143,18 @@ public class EarthController {
         			
         				Region region = pair.getValue();
         				
-        				AddQuadrilateral(earth, region.getPoints()[3], region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], material);
+        				AddQuadrilateral(root3D, region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], region.getPoints()[3], material);
+        				
+        			
         			}
+        			StringBuilder donnee = new StringBuilder();
+        			donnee.append("nbr d'occurence | point 3D \n");
+        			for (Pair<Integer,Region> e : signalements) {
+        				donnee.append(e.getKey().toString() + "\n"
+        				+"\t" + e.getValue().getPoints()[0] +"\n\t" + e.getValue().getPoints()[1] + 
+        				"\n\t" + e.getValue().getPoints()[2]+ "\n\t" + e.getValue().getPoints()[3]);	
+        			}
+        			 description.setText(donnee.toString());
         		}
         });
         

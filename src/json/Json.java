@@ -164,6 +164,7 @@ public class Json {
 		return nbParRegions;
 	}
 	
+	
 	public static ArrayList<Object[]> nbSignalementsIntervalles(String nom, int precision, LocalDate depart, int duree, int nbIntervalles) {
 		
 		ArrayList<Object[]>signalementsIntervalles= new ArrayList<Object[]>();

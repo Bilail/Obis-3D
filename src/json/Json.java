@@ -74,6 +74,33 @@ public class Json {
 		return new JSONObject(json);
 	}
 	
+	public static JSONArray readJsonArrayFromUrl(String url) {
+		
+		String json = "";
+		
+		HttpClient client = HttpClient.newBuilder()
+				.version(Version.HTTP_1_1)
+				.followRedirects(Redirect.NORMAL)
+				.connectTimeout(Duration.ofSeconds(20))
+				.build();
+		
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url))
+				.timeout(Duration.ofMinutes(2))
+				.header("Content-Type", "application/json")
+				.GET()
+				.build();
+		
+		try {
+			json=client.sendAsync(request, BodyHandlers.ofString())
+					.thenApply(HttpResponse::body).get(10, TimeUnit.SECONDS);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new JSONArray(json);
+	}
+	
 	public static ArrayList<Pair<Integer, Region>> nbSignalementsRegions(String nom, int precision){
 		
 		ArrayList<Pair<Integer, Region>> nbParRegions = new ArrayList<Pair<Integer, Region>>();
@@ -160,18 +187,16 @@ public class Json {
 		
 		ArrayList<Signalement> signalements = new ArrayList<Signalement>();
 		
-		
-		
-		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname=" + nom +
+		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname=" + nom.replace(" ", "%20") +
 				"&geometry=" + geohash);
 		
 		for(int i=0; i<json.getJSONArray("results").length(); i++) {
 			
-			Signalement signalement = new Signalement(json.getJSONArray("results").getJSONObject(i).getJSONObject("scientificName").toString(),
-										  json.getJSONArray("results").getJSONObject(i).getJSONObject("order").toString(),
-										  json.getJSONArray("results").getJSONObject(i).getJSONObject("superClass").toString(),
-										  json.getJSONArray("results").getJSONObject(i).getJSONObject("recordedBy").toString(),
-										  json.getJSONArray("results").getJSONObject(i).getJSONObject("species").toString());
+			Signalement signalement = new Signalement(json.getJSONArray("results").getJSONObject(i).get("scientificName").toString(),
+										  json.getJSONArray("results").getJSONObject(i).get("order").toString(),
+										  json.getJSONArray("results").getJSONObject(i).get("superclass").toString(),
+										  json.getJSONArray("results").getJSONObject(i).get("recordedBy").toString(),
+										  json.getJSONArray("results").getJSONObject(i).get("species").toString());
 			signalements.add(signalement);
 		}
 		return signalements;
@@ -180,12 +205,12 @@ public class Json {
 	public static String[] completerNoms(String debut) {
 		
 		String[] premiersNoms= new String[20];
-		
-		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/taxon/complete/verbose/" + debut);
+
+		JSONArray json=readJsonArrayFromUrl("https://api.obis.org/v3/taxon/complete/verbose/" + debut);
 		
 		for(int i =0 ; i<20; i++) {
-			
-			premiersNoms[i] =json.getJSONArray("").getJSONObject(i).getJSONObject("scientificName").toString();
+
+			premiersNoms[i] =json.getJSONObject(i).get("scientificName").toString();
 			
 		}
 		return premiersNoms;
@@ -203,7 +228,7 @@ public class Json {
 		ArrayList<Pair<Integer, Region>> resultat1 = nbSignalementsRegions("Delphinidae",3);
 		System.out.println(resultat1 + "\n");
 		
-		ArrayList<Pair<Integer, Region>> resultat2 = nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2018, 9, 23),LocalDate.of(2019,9,23));
+		ArrayList<Pair<Integer, Region>> resultat2 = nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2016, 6, 15),LocalDate.of(2018,6,14));
 		System.out.println(resultat2 + "\n");
 
 		ArrayList<Object[]> resultat3 = nbSignalementsIntervalles("Delphinidae",3,LocalDate.of(2008, 9, 23),2,5);
@@ -217,9 +242,10 @@ public class Json {
 		
 		/*ArrayList<Signalement> resultat4 = rechercherSignalements("Manta birostris", "spd");
 		System.out.println(resultat4 + "\n");*/
-		
-		/*String[] resultat5 = completerNoms("a");
-		System.out.println(Arrays.toString(resultat5));*/
+
+
+		String[] resultat5 = completerNoms("a");
+		System.out.println(Arrays.toString(resultat5));
 		
 		
 	}

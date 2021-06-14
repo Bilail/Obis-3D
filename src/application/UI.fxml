@@ -60,7 +60,7 @@
             <HBox fx:id="calendrier" prefHeight="33.0" prefWidth="206.0">
                <children>
                   <DatePicker fx:id="dateDebut" />
-                  <DatePicker fx:id="dateFIn" />
+                  <DatePicker fx:id="dateFin" />
                </children>
             </HBox>
             <Label text="Zone géographique : " />

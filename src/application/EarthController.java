@@ -97,25 +97,32 @@ public class EarthController {
         Group root3D = new Group();
         
         //Auto completion 
-        String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester déja 
-        TextFields.bindAutoCompletion(champRecherche, NomEspece);
+        /*String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester déja 
+        TextFields.bindAutoCompletion(champRecherche, NomEspece);*/
         
         btnValider.setOnAction( new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent event) {
         		
+        		System.out.println(earth.getChildren());
+        		earth.getChildren().subList(1, earth.getChildren().size()).clear();
+        		System.out.println(earth.getChildren());
+        		
         		ArrayList<Pair<Integer, Region>> signalements;
         		
+        		System.out.println(dateDebut.getValue());
+        		System.out.println(dateFin.getValue());
+        		
         		if(dateDebut.getValue()!=null) {
-        			
+        			System.out.println(dateDebut.getValue());
         			if(dateFin.getValue() !=null) {
-        				
+        				System.out.println(dateFin.getValue());
         				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), dateFin.getValue());
         				
         			}
         			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), LocalDate.now());}
         		}
-        		else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), LocalDate.now());}
+        		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), 3);}
         		
         			for (Pair<Integer,Region> pair : signalements) {
         			
@@ -130,7 +137,7 @@ public class EarthController {
         			
         				Region region = pair.getValue();
         				
-        				AddQuadrilateral(root3D, region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], region.getPoints()[3], material);
+        				AddQuadrilateral(earth, region.getPoints()[3], region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], material);
         			}
         		}
         });
@@ -323,7 +330,7 @@ public class EarthController {
     	
     	final MeshView meshView = new MeshView(triangleMesh);
     	meshView.setMaterial(material);
-    	parent.getChildren().addAll(meshView);
+    	parent.getChildren().add(meshView);
     	
     	}
 

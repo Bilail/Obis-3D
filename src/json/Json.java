@@ -107,7 +107,7 @@ public class Json {
 		
 		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
 		
-		for(int i=0 ; i<20 ; i++) {
+		for(int i=0 ; i<json.getJSONArray("features").length() ; i++) {
 			
 			int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
 			
@@ -203,15 +203,15 @@ public class Json {
 		return signalements;
 	}
 	
-	public static String[] completerNoms(String debut) {
+	public static ArrayList<String> completerNoms(String debut) {
 		
-		String[] premiersNoms= new String[20];
+		ArrayList<String> premiersNoms = new ArrayList<String>();
 
 		JSONArray json=readJsonArrayFromUrl("https://api.obis.org/v3/taxon/complete/verbose/" + debut);
 		
-		for(int i =0 ; i<20; i++) {
+		for(int i =0 ; i<json.length(); i++) {
 
-			premiersNoms[i] =json.getJSONObject(i).get("scientificName").toString();
+			premiersNoms.add(json.getJSONObject(i).get("scientificName").toString());
 			
 		}
 		return premiersNoms;
@@ -245,8 +245,8 @@ public class Json {
 		System.out.println(resultat4 + "\n");*/
 
 
-		String[] resultat5 = completerNoms("a");
-		System.out.println(Arrays.toString(resultat5));
+		ArrayList<String> resultat5 = completerNoms("a");
+		System.out.println(resultat5);
 		
 		
 	}

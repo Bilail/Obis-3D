@@ -23,6 +23,8 @@ import geohash.GeoHashHelper;
 import geohash.Location;
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,11 +33,13 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.layout.Pane;
@@ -90,6 +94,9 @@ public class EarthController {
 	@FXML
 	private TextField precision;
 	
+	@FXML
+	private ComboBox<String> combo;
+	
 
     private static final float TEXTURE_LAT_OFFSET = -0.2f;
     private static final float TEXTURE_LON_OFFSET = 2.8f;
@@ -106,9 +113,16 @@ public class EarthController {
         Group root3D = new Group();
         
         //Auto completion 
-        /*String[] NomEspece = {"Bilail", "Natanael", "Adrien", "Bilal", "Bilel", "N4tanael"}; // Il faudra juste remplacer par la liste de toutes les especes mais tu peux tester d�ja 
-        TextFields.bindAutoCompletion(champRecherche, NomEspece);*/
-        
+        champRecherche.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        	@Override
+        	public void handle(KeyEvent event) {	
+                	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
+        			ObservableList<String> items =
+            				FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
+            		combo.setItems(items);
+        	}
+        });
+   
         btnValider.setOnAction( new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent event) {
@@ -118,9 +132,7 @@ public class EarthController {
         		System.out.println(earth.getChildren());
         		
         		ArrayList<Pair<Integer, Region>> signalements;
-        		
-        		System.out.println(dateDebut.getValue());
-        		System.out.println(dateFin.getValue());
+
         		
         		if(dateDebut.getValue()!=null) {
         			System.out.println(dateDebut.getValue());
@@ -146,7 +158,7 @@ public class EarthController {
         			
         				Region region = pair.getValue();
         				
-        				AddQuadrilateral(root3D, region.getPoints()[3], region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], material);
+        				AddQuadrilateral(earth, region.getPoints()[3], region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], material);
         				
         			
         			}

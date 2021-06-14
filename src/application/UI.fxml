@@ -15,9 +15,9 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <bottom>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ToolBar prefHeight="33.0" prefWidth="621.0" BorderPane.alignment="CENTER">
         <items>
           <Button fx:id="btnLecture" mnemonicParsing="false" text="Lecture" />
             <Button fx:id="btnPause" mnemonicParsing="false" text="Pause" />
@@ -29,7 +29,7 @@
       </ToolBar>
    </bottom>
    <right>
-      <VBox prefHeight="360.0" prefWidth="206.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="365.0" prefWidth="247.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="207.0" text="Recherche">
                <opaqueInsets>
@@ -65,8 +65,21 @@
             </HBox>
             <Label text="Zone géographique : " />
             <TextField fx:id="ZoneGeo" />
-            <Label text="Liste des epèces" />
-            <ListView fx:id="listeEspeces" prefHeight="106.0" prefWidth="206.0" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="88.0" prefWidth="109.0">
+                     <children>
+                        <Label text="Liste des epèces" />
+                        <ListView fx:id="listeEspeces" prefHeight="106.0" prefWidth="206.0" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="88.0" prefWidth="144.0">
+                     <children>
+                        <Label text="Descriptoion" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
             <Separator prefWidth="200.0" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="211.0" text="Légendes" />
             <Separator prefWidth="200.0" />

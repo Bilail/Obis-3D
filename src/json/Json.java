@@ -23,6 +23,7 @@ import com.sun.beans.introspect.PropertyInfo.Name;
 import Donnee.Region;
 import Donnee.Signalement;
 import application.EarthController;
+import geohash.Location;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.util.Pair;
@@ -241,8 +242,8 @@ public class Json {
 		
 		System.out.println(resultat1.get(0));
 		
-		/*ArrayList<Signalement> resultat4 = rechercherSignalements("Manta birostris", "spd");
-		System.out.println(resultat4 + "\n");*/
+		ArrayList<Signalement> resultat4 = rechercherSignalements("Manta birostris", "spd");
+		System.out.println(resultat4 + "\n");
 
 
 		ArrayList<String> resultat5 = completerNoms("a");

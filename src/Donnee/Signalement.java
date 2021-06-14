@@ -23,6 +23,10 @@ public class Signalement {
 
 	}
 	
+	public String getscientificName() {
+		return this.scientificName;
+	}
+	
 	@Override
 	public String toString() {
 		return "\n" 

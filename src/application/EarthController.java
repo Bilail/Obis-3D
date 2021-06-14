@@ -19,6 +19,7 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import Donnee.Region;
+import Donnee.Signalement;
 import geohash.GeoHashHelper;
 import geohash.Location;
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
@@ -83,7 +84,7 @@ public class EarthController {
 	private TextField champRecherche;
 	
 	@FXML
-	private ListView listeEspece;
+	private ListView<String> listeEspeces;
 	
 	@FXML
 	private TextField ZoneGeo;
@@ -97,7 +98,6 @@ public class EarthController {
 	@FXML
 	private ComboBox<String> combo;
 	
-
     private static final float TEXTURE_LAT_OFFSET = -0.2f;
     private static final float TEXTURE_LON_OFFSET = 2.8f;
     private static final float TEXTURE_OFFSET = 1.01f;
@@ -147,12 +147,12 @@ public class EarthController {
         			System.out.println(dateDebut.getValue());
         			if(dateFin.getValue() !=null) {
         				System.out.println(dateFin.getValue());
-        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), dateFin.getValue());
+        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());
         				
         			}
-        			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), 3, dateDebut.getValue(), LocalDate.now());}
+        			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), LocalDate.now());}
         		}
-        		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), 3);}
+        		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), Integer.valueOf(precision.getText()));}
         		
         			for (Pair<Integer,Region> pair : signalements) {
         			
@@ -180,6 +180,45 @@ public class EarthController {
         			}
         			 description.setText(donnee.toString());
         		}
+        });
+        
+        
+        root3D.addEventHandler(MouseEvent.ANY, event ->{
+      		if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {
+      			
+      			PickResult pickResult = event.getPickResult();
+      			Point3D spaceCoord = pickResult.getIntersectedPoint();
+      			
+      			displayPoint3D(spaceCoord,root3D);
+      			
+      			Point2D geoCoord = SpaceCoordToGeoCoord(spaceCoord);
+      			Location location=new Location("selectedGeoHash", geoCoord.getX(), geoCoord.getY());
+      			String geohash = GeoHashHelper.getGeohash(location);
+      			
+      			
+      			ArrayList<Signalement> signalements = Json.rechercherSignalements(champRecherche.getText(), geohash);
+      			
+      			StringBuilder sb = new StringBuilder();
+      			ArrayList<String> noms = new ArrayList<String>();
+      			
+      			for(Signalement signalement : signalements) {
+      				sb.append(signalement.toString());
+      				noms.add(signalement.getscientificName());
+      			}
+      			
+      			ObservableList<String> items = FXCollections.observableArrayList(noms);
+      			listeEspeces.setItems(items);
+      			description.setText(sb.toString());
+      			
+
+      		}
+      	});
+        
+        listeEspeces.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        	@Override
+        	public void handle(MouseEvent event) {
+        		champRecherche.setText(listeEspeces.getSelectionModel().getSelectedItem());
+        	}
         });
         
         // Load geometry
@@ -252,18 +291,7 @@ public class EarthController {
         pane3D.getChildren().addAll(subscene);
         
         
-        root3D.addEventHandler(MouseEvent.ANY, event ->{
-      		if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {
-      			
-      			PickResult pickResult = event.getPickResult();
-      			Point3D spaceCoord = pickResult.getIntersectedPoint();
-      			
-      			displayPoint3D(spaceCoord,root3D);
-      			Point2D geoCoord = SpaceCoordToGeoCoord(spaceCoord);
-      			Location loc=new Location("selectedGeoHash", geoCoord.getX(), geoCoord.getY());
-      			System.out.println(GeoHashHelper.getGeohash(loc));
-      		}
-      	});
+        
 
     }
 

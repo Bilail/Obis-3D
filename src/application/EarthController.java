@@ -140,7 +140,14 @@ public class EarthController {
         				
         			
         			}
-        			 description.setText(signalements.toString());
+        			StringBuilder donnee = new StringBuilder();
+        			donnee.append("nbr d'occurence | point 3D \n");
+        			for (Pair<Integer,Region> e : signalements) {
+        				donnee.append(e.getKey().toString() + "\n"
+        				+"\t" + e.getValue().getPoints()[0] +"\n\t" + e.getValue().getPoints()[1] + 
+        				"\n\t" + e.getValue().getPoints()[2]+ "\n\t" + e.getValue().getPoints()[3]);	
+        			}
+        			 description.setText(donnee.toString());
         		}
         });
         

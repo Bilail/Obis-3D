@@ -87,7 +87,7 @@ public class EarthController {
 	private ListView<String> listeEspeces;
 	
 	@FXML
-	private TextField ZoneGeo;
+	private TextField intervalleTemps;
 	
 	@FXML
 	private TextArea description;
@@ -167,7 +167,7 @@ public class EarthController {
         			
         				Region region = pair.getValue();
         				
-        				AddQuadrilateral(earth, region.getPoints()[3], region.getPoints()[0], region.getPoints()[1], region.getPoints()[2], material);
+        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
         				
         			
         			}
@@ -190,14 +190,15 @@ public class EarthController {
       			Point3D spaceCoord = pickResult.getIntersectedPoint();
       			
       			displayPoint3D(spaceCoord,root3D);
-      			
+      			System.out.println(champRecherche.getText());
       			Point2D geoCoord = SpaceCoordToGeoCoord(spaceCoord);
-      			Location location=new Location("selectedGeoHash", geoCoord.getX(), geoCoord.getY());
-      			String geohash = GeoHashHelper.getGeohash(location);
-      			geohash = geohash.substring(0, 3);
+      			String geohash = GeoHashHelper.getGeohash(new Location("selectedGeoHash", geoCoord.getX(), geoCoord.getY()));
+      			geohash = geohash.substring(0, 2);
       			System.out.println(geohash);
+      			
       			ArrayList<Signalement> signalements = Json.rechercherSignalements(champRecherche.getText(), geohash);
       			System.out.println(signalements);
+      			
       			StringBuilder sb = new StringBuilder();
       			ArrayList<String> noms = new ArrayList<String>();
       			

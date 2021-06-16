@@ -307,7 +307,6 @@ public class Json {
 		ArrayList<String> resultat5 = completerNoms("a");
 		System.out.println(resultat5);
 		
-		
 	}
 	
 }

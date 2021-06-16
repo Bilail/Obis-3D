@@ -117,9 +117,9 @@ public class Json {
 			for(int j=0; j<4; j++) {
 				
 				Point2D geoCoord = new Point2D(json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
-									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(0).floatValue(),
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(1).floatValue(),
 									           json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
-									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(1).floatValue());
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(0).floatValue());
 				coords[j]=geoCoord;
 			}
 			
@@ -189,33 +189,77 @@ public class Json {
 		
 		ArrayList<Signalement> signalements = new ArrayList<Signalement>();
 		
-		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname=" + nom.replace(" ", "%20") +
-				"&geometry=" + geohash);
+		JSONObject json; 
+		
+		if(nom!="") {
+			json=readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname=" + nom.replace(" ", "%20") +
+					"&geometry=" + geohash);
+		}
+		else {
+			json=readJsonFromUrl("https://api.obis.org/v3/occurrence?geometry=" + geohash);
+		}
 		
 		for(int i=0; i<json.getJSONArray("results").length(); i++) {
-			
-			if(json.getJSONArray("results").getJSONObject(i).has("recordedBy")) {
-				
+		
 				Signalement signalement = new Signalement(json.getJSONArray("results").getJSONObject(i).get("scientificName").toString(),
-						  json.getJSONArray("results").getJSONObject(i).get("order").toString(),
-						  json.getJSONArray("results").getJSONObject(i).get("superclass").toString(),
-						  json.getJSONArray("results").getJSONObject(i).get("recordedBy").toString(),
-						  json.getJSONArray("results").getJSONObject(i).get("species").toString());
+						  order(json,i),
+						  superClass(json,i),
+						  recordedBy(json,i),
+						  species(json,i));
 				
 			signalements.add(signalement);
-			}
-			else {
-				
-				Signalement signalement = new Signalement(json.getJSONArray("results").getJSONObject(i).get("scientificName").toString(),
-						  json.getJSONArray("results").getJSONObject(i).get("order").toString(),
-						  json.getJSONArray("results").getJSONObject(i).get("superclass").toString(),
-						  "no data",
-						  json.getJSONArray("results").getJSONObject(i).get("species").toString());
-				
-				signalements.add(signalement);
-			}
+			
 		}
 		return signalements;
+	}
+	
+	public static String recordedBy(JSONObject json, int i) {
+		
+		if(json.getJSONArray("results").getJSONObject(i).has("recordedBy")) {
+			
+			return json.getJSONArray("results").getJSONObject(i).get("recordedBy").toString();
+			
+		}
+		else {
+			return "no data";
+		}
+	}
+	
+	public static String superClass(JSONObject json, int i) {
+		
+		if(json.getJSONArray("results").getJSONObject(i).has("superclass")) {
+			
+			return json.getJSONArray("results").getJSONObject(i).get("superclass").toString();
+			
+		}
+		else {
+			return "no data";
+		}
+	}
+	
+	public static String species(JSONObject json, int i) {
+		
+		if(json.getJSONArray("results").getJSONObject(i).has("species")) {
+			
+			return json.getJSONArray("results").getJSONObject(i).get("species").toString();
+			
+		}
+		else {
+			return "no data";
+		}
+	}
+	
+	public static String order(JSONObject json, int i) {
+
+		
+		if(json.getJSONArray("results").getJSONObject(i).has("order")) {
+			
+			return json.getJSONArray("results").getJSONObject(i).get("order").toString();
+			
+		}
+		else {
+			return "no data";
+		}
 	}
 	
 	public static ArrayList<String> completerNoms(String debut) {
@@ -256,7 +300,7 @@ public class Json {
 		
 		System.out.println(resultat1.get(0));
 		
-		ArrayList<Signalement> resultat4 = rechercherSignalements("Mobula birostris", "spd");
+		ArrayList<Signalement> resultat4 = rechercherSignalements("Delphinidae", "mj8");
 		System.out.println(resultat4 + "\n");
 
 

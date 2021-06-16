@@ -13,7 +13,7 @@ public class Signalement {
 	
 	// Il manque la region, un signalement ce fais dans une region donnée
 
-	public Signalement(String scientificName, String species, String order, String recordedBy, String superclass) {
+	public Signalement(String scientificName, String order, String superclass , String recordedBy, String species) {
 		
 		this.scientificName=scientificName;
 		this.species=species;

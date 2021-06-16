@@ -194,10 +194,10 @@ public class EarthController {
       			Point2D geoCoord = SpaceCoordToGeoCoord(spaceCoord);
       			Location location=new Location("selectedGeoHash", geoCoord.getX(), geoCoord.getY());
       			String geohash = GeoHashHelper.getGeohash(location);
-      			
-      			
+      			geohash = geohash.substring(0, 3);
+      			System.out.println(geohash);
       			ArrayList<Signalement> signalements = Json.rechercherSignalements(champRecherche.getText(), geohash);
-      			
+      			System.out.println(signalements);
       			StringBuilder sb = new StringBuilder();
       			ArrayList<String> noms = new ArrayList<String>();
       			
@@ -218,6 +218,7 @@ public class EarthController {
         	@Override
         	public void handle(MouseEvent event) {
         		champRecherche.setText(listeEspeces.getSelectionModel().getSelectedItem());
+        		combo.getSelectionModel().select(null);
         	}
         });
         

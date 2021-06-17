@@ -33,6 +33,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -52,6 +54,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import json.Json;
@@ -121,6 +124,17 @@ public class EarthController {
                 	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
         			ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
             		combo.setItems(items);
+            		
+            		if (items.size() == 0) {
+            			Alert alert = new Alert(AlertType.INFORMATION);
+            			alert.setTitle("Message d'alerte");
+            			alert.setHeaderText(null);
+            			alert.setContentText("Nom d'espèce non repertoriée");
+            			//alert.initModality(Modality.NONE);
+            			alert.initModality(Modality.APPLICATION_MODAL);
+
+            			alert.showAndWait();	
+        		}
         	}
         });
         
@@ -186,7 +200,15 @@ public class EarthController {
         		}
         		else {
         			
-            		System.out.println("precision invalide, essayez 2,3 ou 4");
+            		Alert alert = new Alert(AlertType.INFORMATION);
+            		alert.setTitle("Message d'alerte");
+            		alert.setHeaderText(null);
+            		alert.setContentText("précision invalise, merci de rentrer une valeur entre 2 et 4");
+            		//alert.initModality(Modality.NONE);
+            		alert.initModality(Modality.APPLICATION_MODAL);
+
+            		alert.showAndWait();	
+ 
             	}
         	}
         	

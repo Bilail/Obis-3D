@@ -48,10 +48,12 @@ import javafx.scene.input.PickResult;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Modality;
@@ -146,9 +148,9 @@ public class EarthController {
         champRecherche.setOnKeyReleased(new EventHandler<KeyEvent>() {
         	@Override
         	public void handle(KeyEvent event) {	
-                	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
-        			ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
-            		combo.setItems(items);
+                	TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
+        			//ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
+            		//combo.setItems(items);
             		TextFields.bindAutoCompletion(champRecherche, items);
             		
             		
@@ -308,9 +310,9 @@ public class EarthController {
 
 
         // Draw city on the earth
-      	/*displayPoint(root3D, "Brest", 48.447911f, -4.418539f);
-      	displayPoint(root3D, "Marseille", 43.435555f, 5.213611f);
-      	displayPoint(root3D, "New York ", 40.639751f, -73.778925f);
+      	//displayPoint(root3D, "Brest",  -4.418539f,48.447911f);
+      	displayPoint(earth, "Marseille", 43.435555f, 5.213611f);
+      	/*displayPoint(root3D, "New York ", 40.639751f, -73.778925f);
       	displayPoint(root3D, "Cape Town", -33.964806f, 18.601667f);
       	displayPoint(root3D, "Istanbul", 40.976922f, 28.814606f);
       	displayPoint(root3D, "Reykjavik", 64.13f, -21.940556f);
@@ -333,6 +335,25 @@ public class EarthController {
 
       	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);*/
       	
+        /*Point3D from = geoCoordTo3dCoord(43.435555f, 5.213611f);
+        Box box = new Box(0.01f,0.01f,5.0f);
+        box.setTranslateX(from.getX());
+        box.setTranslateY(from.getY());
+        box.setTranslateZ(from.getZ());
+        Point3D to = Point3D.ZERO;
+        
+        Point3D yDir = new Point3D(0, 1, 0);
+        
+        Affine affine = new Affine();
+        affine.append(lookAt(from,to,yDir));
+        
+        Group group = new Group();
+        group.getChildren().add(box);
+        
+        group.getTransforms().setAll(affine); 
+        earth.getChildren().addAll(group);
+
+        root3D.getChildren().addAll(earth);*/
       	
       	
         // Add a camera group
@@ -397,6 +418,17 @@ public class EarthController {
         return line;
     }
     
+    public static Affine lookAt(Point3D from, Point3D to, Point3D ydir) {
+    	
+        Point3D zVec = to.subtract(from).normalize();
+        Point3D xVec = ydir.normalize().crossProduct(zVec).normalize();
+        Point3D yVec = zVec.crossProduct(xVec).normalize();
+        
+        return new Affine(xVec.getX(), yVec.getX(), zVec.getX(), from.getX(),
+                          xVec.getY(), yVec.getY(), zVec.getY(), from.getY(),
+                          xVec.getZ(), yVec.getZ(), zVec.getZ(), from.getZ());
+    }
+    
     public static int[] computeLegend(ArrayList<Pair<Integer,Region>> signalements) {
     	
     	int max = signalements.get(0).getKey();
@@ -447,7 +479,7 @@ public class EarthController {
     	
     	displayPoint3D(point,parent).setId(name);
     }
-    
+
     private void AddQuadrilateral(Group parent, Point3D topRight, Point3D bottomRight, Point3D bottomLeft,
     		Point3D topLeft, PhongMaterial material) {
     	

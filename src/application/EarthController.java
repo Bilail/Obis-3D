@@ -149,8 +149,10 @@ public class EarthController {
                 	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
         			ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
             		combo.setItems(items);
+            		TextFields.bindAutoCompletion(champRecherche, items);
             		
-            		if (items.size() == 0) {
+            		
+            		if (items.size() == 0 && champRecherche.getLength() > 0 ) {
             			Alert alert = new Alert(AlertType.INFORMATION);
             			alert.setTitle("Message d'alerte");
             			alert.setHeaderText(null);
@@ -166,7 +168,7 @@ public class EarthController {
         combo.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent event) {	
-                	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
+                	
         			champRecherche.setText(combo.getSelectionModel().getSelectedItem());
         	}
         });

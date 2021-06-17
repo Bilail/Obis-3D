@@ -38,7 +38,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 
 public class Json {
 	
-	private static String readAll(Reader rd) throws IOException{
+	public static String readAll(Reader rd) throws IOException{
 		StringBuilder sb = new StringBuilder();
 		int cp;
 		

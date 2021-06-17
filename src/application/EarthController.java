@@ -1,5 +1,8 @@
 package application;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
 
@@ -14,6 +17,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.TextFields;
+import org.json.JSONObject;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -131,9 +135,21 @@ public class EarthController {
     public Group earth;
     
 
-    public void initialize() {
+    public void initialize() throws FileNotFoundException, IOException {
     	
     	//description.setEditable(false);
+    	
+    	//on initialise les donnée avec un fichier json local
+    	try (Reader reader = new FileReader("../Donnee/Delphinidae.json")){
+    		BufferedReader rd = new BufferedReader(reader);
+    		String JsonText = Json.readAll(rd);
+    		JSONObject json = new JSONObject(JsonText);
+    		
+    		//parcer le json pour afficher les données	
+    	}
+    	catch (IOException e) {
+    		e.printStackTrace();
+    	}
     	
     	precision.setText("3");
     	

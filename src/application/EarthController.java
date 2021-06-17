@@ -197,12 +197,12 @@ public class EarthController {
         		}
         		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), Integer.valueOf(precision.getText()));}
         		
-        			L1.setText("< " + computeLegend(signalements)[0]);
-        			L2.setText("< " + computeLegend(signalements)[1]);
-        			L3.setText("< " + computeLegend(signalements)[2]);
-        			L4.setText("< " + computeLegend(signalements)[3]);
-        			L5.setText("< " + computeLegend(signalements)[4]);
-        			L6.setText("< " + computeLegend(signalements)[5]);
+        			L6.setText("< " + computeLegend(signalements)[0]);
+        			L5.setText("< " + computeLegend(signalements)[1]);
+        			L4.setText("< " + computeLegend(signalements)[2]);
+        			L3.setText("< " + computeLegend(signalements)[3]);
+        			L2.setText("< " + computeLegend(signalements)[4]);
+        			L1.setText("< " + computeLegend(signalements)[5]);
         		
         			for (Pair<Integer,Region> pair : signalements) {
         			

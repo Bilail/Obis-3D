@@ -1,7 +1,8 @@
-package tests.application;
+package tests;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -35,6 +36,10 @@ public class MainTest {
 		int res  = 8147; 
 		assertEquals(signalements.get(0).getKey().intValue() ,res);
 		
+		//test de la fonction si on ajoute une date
+		signalements = Json.nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2016, 6, 15),LocalDate.of(2018,6,14));
+		res = 3346;
+		assertEquals(signalements.get(0).getKey().intValue() ,res);
 		
 		
 	}

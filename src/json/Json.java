@@ -289,7 +289,7 @@ public class Json {
 		System.out.println(resultat1 + "\n");
 		
 		ArrayList<Pair<Integer, Region>> resultat2 = nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2016, 6, 15),LocalDate.of(2018,6,14));
-		System.out.println(resultat2 + "\n");
+		System.out.println("avec date " + resultat2 + "\n");
 
 		ArrayList<Object[]> resultat3 = nbSignalementsIntervalles("Delphinidae",3,LocalDate.of(2008, 9, 23),2,5);
 		System.out.println(Arrays.toString(resultat3.get(0)));

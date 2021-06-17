@@ -158,7 +158,8 @@ public class EarthController {
             		
             		
             		if (items.size() == 0 && champRecherche.getLength() > 0 ) {
-            			Alert alert = new Alert(AlertType.INFORMATION);
+            			
+            			Alert alert = new Alert(AlertType.WARNING);
             			alert.setTitle("Message d'alerte");
             			alert.setHeaderText(null);
             			alert.setContentText("Nom d'espèce non repertoriée");
@@ -195,14 +196,17 @@ public class EarthController {
         		
         		if(dateDebut.getValue()!=null) {
         			System.out.println(dateDebut.getValue());
+        			
+        			// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
+        			if (dateFin.getValue() == null && nbrIntervalle != null && duree != null){
+        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateDebut.getValue() );
+        			}
+        
         			if(dateFin.getValue() !=null) {
         				System.out.println(dateFin.getValue());
         				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());
         				
-        				if(nbrIntervalle != null) {
-        					// on faite (date de fin - date de début)/intervalleTemps 
-        					// Puis on fait une boucle ou on fait 
-        				}
+        				
         				
         			}
         			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), LocalDate.now());}
@@ -244,9 +248,9 @@ public class EarthController {
         		}
         		else {
         			
-            		Alert alert = new Alert(AlertType.INFORMATION);
+            		Alert alert = new Alert(AlertType.WARNING);
             		alert.setTitle("Message d'alerte");
-            		alert.setHeaderText(null);
+            		alert.setHeaderText("Erreur Precision GeoHash");
             		alert.setContentText("précision invalise, merci de rentrer une valeur entre 2 et 4");
             		//alert.initModality(Modality.NONE);
             		alert.initModality(Modality.APPLICATION_MODAL);
@@ -288,9 +292,11 @@ public class EarthController {
       			description.setText(sb.toString());
       			
       			Alert alert = new Alert(AlertType.INFORMATION);
-        		alert.setTitle("Message d'alerte");
-        		alert.setHeaderText(null);
-        		alert.setContentText(sb.toString());
+        		alert.setTitle("information sur la zone");
+        		alert.setHeaderText("Espece présente dans la Zone");
+        		alert.setResizable(true);
+        		//alert.setContentText(sb.toString());
+        		alert.getDialogPane().setContent(listeEspeces);
         		alert.initModality(Modality.NONE);
         		//alert.initModality(Modality.APPLICATION_MODAL);
 

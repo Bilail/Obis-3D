@@ -149,8 +149,8 @@ public class EarthController {
         	@Override
         	public void handle(KeyEvent event) {	
                 	TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
-        			//ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
-            		//combo.setItems(items);
+        			ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
+            		combo.setItems(items);
             		TextFields.bindAutoCompletion(champRecherche, items);
             		
             		

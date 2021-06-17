@@ -301,11 +301,11 @@ public class Json {
 		System.out.println(resultat1.get(0));
 		
 		ArrayList<Signalement> resultat4 = rechercherSignalements("Delphinidae", "mj8");
-		System.out.println(resultat4 + "\n");
+		System.out.println("r4 : " + resultat4 + "\n");
 
 
-		ArrayList<String> resultat5 = completerNoms("a");
-		System.out.println(resultat5);
+		ArrayList<String> resultat5 = completerNoms("delphi");
+		System.out.println(resultat5.get(0));
 		
 	}
 	

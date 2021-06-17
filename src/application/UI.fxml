@@ -16,12 +16,12 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="811.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="957.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <center>
-      <Pane fx:id="pane3D" prefHeight="477.0" prefWidth="415.0" BorderPane.alignment="CENTER" />
+      <Pane fx:id="pane3D" prefHeight="556.0" prefWidth="472.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
-      <HBox prefHeight="507.0" prefWidth="396.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="543.0" prefWidth="495.0" BorderPane.alignment="CENTER">
          <children>
             <VBox prefHeight="500.0" prefWidth="204.0">
                <children>
@@ -209,13 +209,16 @@
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
             </VBox>
-            <VBox prefHeight="486.0" prefWidth="188.0">
+            <VBox prefHeight="543.0" prefWidth="272.0">
                <children>
                   <Label alignment="CENTER" prefHeight="33.0" prefWidth="165.0" text="Descriptions" />
-                  <TextArea fx:id="description" prefHeight="482.0" prefWidth="170.0">
+                  <TextArea fx:id="description" prefHeight="504.0" prefWidth="257.0">
                      <VBox.margin>
-                        <Insets left="5.0" right="5.0" />
+                        <Insets left="5.0" right="10.0" />
                      </VBox.margin></TextArea>
                </children>
             </VBox>

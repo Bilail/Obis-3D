@@ -295,13 +295,23 @@ public class EarthController {
         		alert.setTitle("information sur la zone");
         		alert.setHeaderText("Espece présente dans la Zone");
         		alert.setResizable(true);
-        		//alert.setContentText(sb.toString());
-        		alert.getDialogPane().setContent(listeEspeces);
+        		alert.setContentText(sb.toString());
         		alert.initModality(Modality.NONE);
         		//alert.initModality(Modality.APPLICATION_MODAL);
-
+        		//alert.getDialogPane().setContent(description);
         		alert.showAndWait();
-      			
+        		
+        		/*Alert listespec = new Alert(AlertType.INFORMATION);
+        		listespec.setTitle("information sur la zone");
+        		listespec.setHeaderText("Espece présente dans la Zone");
+        		listespec.setResizable(true);
+        		//alert.setContentText(sb.toString());
+        		listespec.getDialogPane().setContent(listeEspeces);
+        		listespec.initModality(Modality.NONE);
+        		//alert.initModality(Modality.APPLICATION_MODAL);
+
+        		listespec.showAndWait();
+      			*/
       			
 
       		}
@@ -398,7 +408,7 @@ public class EarthController {
         root3D.getChildren().add(ambientLight);
 
         // Create scene
-        SubScene subscene = new SubScene(root3D, 415, 477, true, SceneAntialiasing.BALANCED);
+        SubScene subscene = new SubScene(root3D, 472, 556, true, SceneAntialiasing.BALANCED);
         subscene.setCamera(camera);
         subscene.setFill(Color.GREY);
         pane3D.getChildren().addAll(subscene);

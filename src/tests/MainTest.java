@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Donnee.Region;
+import Donnee.Signalement;
 import javafx.util.Pair;
 
 import javafx.util.Pair;
@@ -50,10 +51,18 @@ public class MainTest {
 	}
 	
 	@Test
-	public void test() {
-		
+	public void testRechercherSignalements() {
+		ArrayList<Signalement> s = Json.rechercherSignalements("Delphinidae", "mj8");
+		String res = "Stenella attenuata";
+		assertEquals(res, s.get(0).getscientificName());
 	}
 		
+	@Test
+	public void testCompleterNoms() {
+		ArrayList<String> noms = Json.completerNoms("delphi");
+		String res = "Delphinidae";
+		assertEquals(res, noms.get(0));
+	}
 	
 
 }

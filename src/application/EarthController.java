@@ -176,12 +176,12 @@ public class EarthController {
         			
         				final PhongMaterial material = new PhongMaterial();
         			
-        				if(pair.getKey() <= 500) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.1));}
-        				else if(pair.getKey() <= 1000) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
-        				else if(pair.getKey() <= 2000) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-        				else if(pair.getKey() <= 4000) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-        				else if(pair.getKey() <= 8000) {material.setDiffuseColor(new Color(1, 0.5, 0.0, 0.1));}
-        				else {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+        				if(pair.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.1));}
+        				else if(pair.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
+        				else if(pair.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+        				else if(pair.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+        				else if(pair.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
+        				else if(pair.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
         			
         				Region region = pair.getValue();
         				
@@ -361,6 +361,18 @@ public class EarthController {
         line.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
 
         return line;
+    }
+    
+    public static int[] computeLegend(ArrayList<Pair<Integer,Region>> signalements) {
+    	
+    	int max = signalements.get(0).getKey();
+
+    	int pas = max/6;
+    	
+    	int[] valeursLegende = {pas,2*pas,3*pas,4*pas,5*pas,max};
+    	
+		return valeursLegende;
+
     }
 
     public static Point3D geoCoordTo3dCoord(float lat, float lon) {

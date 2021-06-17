@@ -9,7 +9,6 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -17,26 +16,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="755.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
-   <bottom>
-      <ToolBar prefHeight="35.0" prefWidth="729.0" BorderPane.alignment="CENTER">
-        <items>
-          <Button fx:id="btnLecture" mnemonicParsing="false" text="Lecture" />
-            <Button fx:id="btnPause" mnemonicParsing="false" text="Pause" />
-            <Button fx:id="btnStop" mnemonicParsing="false" text="Stop" />
-        </items>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-      </ToolBar>
-   </bottom>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="486.0" prefWidth="811.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <center>
       <Pane fx:id="pane3D" prefHeight="413.0" prefWidth="363.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
-      <HBox prefHeight="413.0" prefWidth="363.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="486.0" prefWidth="396.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="413.0" prefWidth="226.0">
+            <VBox prefHeight="486.0" prefWidth="237.0">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="248.0" text="Recherche">
                      <opaqueInsets>
@@ -49,13 +36,14 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
+                  <Separator prefWidth="200.0" />
                   <Label text="Nom de l'espèce" />
                   <TextField fx:id="champRecherche" prefHeight="25.0" prefWidth="184.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets bottom="5.0" />
                      </VBox.margin>
                   </TextField>
-                  <ComboBox fx:id="combo" prefHeight="25.0" prefWidth="194.0" />
+                  <ComboBox fx:id="combo" prefHeight="25.0" prefWidth="215.0" />
                   <HBox prefHeight="21.0" prefWidth="206.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="86.0" text="Date début" />
@@ -95,7 +83,10 @@
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="211.0" text="Légendes" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="211.0" text="Légendes">
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding></Label>
                   <Separator prefWidth="200.0" />
                   <HBox prefHeight="84.0" prefWidth="206.0">
                      <children>
@@ -104,19 +95,37 @@
                               <HBox prefHeight="26.0" prefWidth="100.0">
                                  <children>
                                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff231f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                                    <Label text="Label" />
+                                    <Label fx:id="L1" text="Label">
+                                       <HBox.margin>
+                                          <Insets left="3.0" top="2.0" />
+                                       </HBox.margin></Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="2.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="24.0" prefWidth="100.0">
+                                 <children>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff9d1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0">
+                                       <HBox.margin>
+                                          <Insets top="2.0" />
+                                       </HBox.margin></Rectangle>
+                                    <Label fx:id="L2" text="Label">
+                                       <HBox.margin>
+                                          <Insets left="3.0" top="2.0" />
+                                       </HBox.margin></Label>
                                  </children>
                               </HBox>
                               <HBox prefHeight="24.0" prefWidth="100.0">
                                  <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff9d1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                                    <Label text="Label" />
-                                 </children>
-                              </HBox>
-                              <HBox prefHeight="24.0" prefWidth="100.0">
-                                 <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e9f00e" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                                    <Label text="Label" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e9f00e" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0">
+                                       <HBox.margin>
+                                          <Insets top="2.0" />
+                                       </HBox.margin></Rectangle>
+                                    <Label fx:id="L3" text="Label">
+                                       <HBox.margin>
+                                          <Insets left="3.0" top="2.0" />
+                                       </HBox.margin></Label>
                                  </children>
                               </HBox>
                            </children>
@@ -125,39 +134,79 @@
                            <children>
                               <HBox prefHeight="26.0" prefWidth="100.0">
                                  <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#90ff1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                                    <Label text="Label" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#90ff1f" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0">
+                                       <HBox.margin>
+                                          <Insets top="2.0" />
+                                       </HBox.margin></Rectangle>
+                                    <Label fx:id="L4" text="Label">
+                                       <HBox.margin>
+                                          <Insets left="3.0" top="2.0" />
+                                       </HBox.margin></Label>
                                  </children>
                               </HBox>
                               <HBox prefHeight="24.0" prefWidth="100.0">
                                  <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fe4ff" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                                    <Label text="Label" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fe4ff" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0">
+                                       <HBox.margin>
+                                          <Insets top="2.0" />
+                                       </HBox.margin></Rectangle>
+                                    <Label fx:id="L5" text="Label">
+                                       <HBox.margin>
+                                          <Insets left="3.0" top="2.0" />
+                                       </HBox.margin></Label>
                                  </children>
                               </HBox>
                               <HBox prefHeight="24.0" prefWidth="100.0">
                                  <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                                    <Label text="Label" />
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="26.0" stroke="BLACK" strokeType="INSIDE" width="52.0">
+                                       <HBox.margin>
+                                          <Insets top="2.0" />
+                                       </HBox.margin></Rectangle>
+                                    <Label fx:id="L6" text="Label">
+                                       <HBox.margin>
+                                          <Insets left="3.0" top="2.0" />
+                                       </HBox.margin></Label>
                                  </children>
                               </HBox>
                            </children>
                         </VBox>
                      </children>
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding>
                   </HBox>
                   <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Valider">
                      <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                     </padding>
+                  </Button>
+                  <HBox alignment="CENTER" prefHeight="28.0" prefWidth="174.0">
+                     <children>
+                      <Button fx:id="btnLecture" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Lecture" />
+                        <Button fx:id="btnPause" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Pause" />
+                        <Button fx:id="btnStop" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Stop" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <VBox.margin>
                         <Insets />
                      </VBox.margin>
-                  </Button>
+                  </HBox>
                </children>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
             </VBox>
-            <VBox prefHeight="413.0" prefWidth="241.0">
+            <VBox prefHeight="486.0" prefWidth="188.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="216.0" text="Descriptions" />
+                  <Label alignment="CENTER" prefHeight="33.0" prefWidth="165.0" text="Descriptions" />
                   <TextArea fx:id="description" prefHeight="427.0" prefWidth="167.0">
                      <VBox.margin>
                         <Insets left="5.0" right="5.0" />

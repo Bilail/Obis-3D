@@ -319,7 +319,7 @@ public class EarthController {
         root3D.getChildren().add(ambientLight);
 
         // Create scene
-        SubScene subscene = new SubScene(root3D, 367, 350, true, SceneAntialiasing.BALANCED);
+        SubScene subscene = new SubScene(root3D, 415, 477, true, SceneAntialiasing.BALANCED);
         subscene.setCamera(camera);
         subscene.setFill(Color.GREY);
         pane3D.getChildren().addAll(subscene);

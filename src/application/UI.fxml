@@ -18,7 +18,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="486.0" prefWidth="811.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <center>
-      <Pane fx:id="pane3D" prefHeight="413.0" prefWidth="363.0" BorderPane.alignment="CENTER" />
+      <Pane fx:id="pane3D" prefHeight="477.0" prefWidth="415.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
       <HBox prefHeight="486.0" prefWidth="396.0" BorderPane.alignment="CENTER">

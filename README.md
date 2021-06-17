@@ -25,6 +25,5 @@ Dans le run configuration rajouté sa comme argument, pour pouvoir utiliser la b
 ```
 --add-modules javafx.controls,javafx.fxml
 --add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED
-
 ```
 

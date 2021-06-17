@@ -92,7 +92,10 @@ public class EarthController {
 	private ListView<String> listeEspeces;
 	
 	@FXML
-	private TextField intervalleTemps;
+	private TextField nbrIntervalle;
+	
+	@FXML
+	private TextField duree;
 	
 	@FXML
 	private TextArea description;
@@ -196,6 +199,11 @@ public class EarthController {
         				System.out.println(dateFin.getValue());
         				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());
         				
+        				if(nbrIntervalle != null) {
+        					// on faite (date de fin - date de début)/intervalleTemps 
+        					// Puis on fait une boucle ou on fait 
+        				}
+        				
         			}
         			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), LocalDate.now());}
         		}
@@ -278,6 +286,16 @@ public class EarthController {
       			ObservableList<String> items = FXCollections.observableArrayList(noms);
       			listeEspeces.setItems(items);
       			description.setText(sb.toString());
+      			
+      			Alert alert = new Alert(AlertType.INFORMATION);
+        		alert.setTitle("Message d'alerte");
+        		alert.setHeaderText(null);
+        		alert.setContentText(sb.toString());
+        		alert.initModality(Modality.NONE);
+        		//alert.initModality(Modality.APPLICATION_MODAL);
+
+        		alert.showAndWait();
+      			
       			
 
       		}

@@ -16,14 +16,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="486.0" prefWidth="811.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="811.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <center>
       <Pane fx:id="pane3D" prefHeight="477.0" prefWidth="415.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
-      <HBox prefHeight="486.0" prefWidth="396.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="507.0" prefWidth="396.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="486.0" prefWidth="237.0">
+            <VBox prefHeight="500.0" prefWidth="204.0">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="248.0" text="Recherche">
                      <opaqueInsets>
@@ -56,19 +56,25 @@
                         <DatePicker fx:id="dateFin" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox prefHeight="203.0" prefWidth="196.0">
                      <children>
-                        <VBox prefHeight="88.0" prefWidth="254.0">
+                        <VBox prefHeight="247.0" prefWidth="192.0">
                            <children>
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <VBox prefHeight="42.0" prefWidth="148.0">
+                                    <VBox prefHeight="42.0" prefWidth="147.0">
                                        <children>
-                                          <Label text="intervalle de temps" />
-                                          <TextField fx:id="intervalleTemps" prefHeight="25.0" prefWidth="119.0" />
+                                          <Label alignment="CENTER" prefHeight="17.0" prefWidth="83.0" text="nbr intervalle" />
+                                          <TextField fx:id="nbrIntervalle" prefHeight="25.0" prefWidth="97.0" />
                                        </children>
                                     </VBox>
-                                    <VBox prefHeight="42.0" prefWidth="86.0">
+                                    <VBox prefHeight="42.0" prefWidth="128.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="17.0" prefWidth="74.0" text="durée" />
+                                          <TextField fx:id="duree" />
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="42.0" prefWidth="119.0">
                                        <children>
                                           <Label alignment="CENTER" prefHeight="17.0" prefWidth="96.0" text="précision " />
                                           <TextField fx:id="precision" />
@@ -77,13 +83,13 @@
                                  </children>
                               </HBox>
                               <Label text="Liste des epèces" />
-                              <ListView fx:id="listeEspeces" prefHeight="106.0" prefWidth="206.0" />
+                              <ListView fx:id="listeEspeces" prefHeight="285.0" prefWidth="140.0" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
-                  <Separator prefWidth="200.0" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="211.0" text="Légendes">
+                  <Separator prefHeight="15.0" prefWidth="192.0" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="3.0" prefWidth="192.0" text="Légendes">
                      <padding>
                         <Insets top="5.0" />
                      </padding></Label>
@@ -175,7 +181,7 @@
                         <Insets bottom="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Valider">
+                  <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="192.0" text="Valider">
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
@@ -207,7 +213,7 @@
             <VBox prefHeight="486.0" prefWidth="188.0">
                <children>
                   <Label alignment="CENTER" prefHeight="33.0" prefWidth="165.0" text="Descriptions" />
-                  <TextArea fx:id="description" prefHeight="427.0" prefWidth="167.0">
+                  <TextArea fx:id="description" prefHeight="482.0" prefWidth="170.0">
                      <VBox.margin>
                         <Insets left="5.0" right="5.0" />
                      </VBox.margin></TextArea>

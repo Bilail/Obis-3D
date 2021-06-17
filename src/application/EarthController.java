@@ -102,22 +102,22 @@ public class EarthController {
 	private ComboBox<String> combo;
 	
 	@FXML
-	private Label l1;
+	private Label L1;
 	
 	@FXML
-	private Label l2;
+	private Label L2;
 	
 	@FXML
-	private Label l3;
+	private Label L3;
 	
 	@FXML
-	private Label l4;
+	private Label L4;
 	
 	@FXML
-	private Label l5;
+	private Label L5;
 	
 	@FXML
-	private Label l6;
+	private Label L6;
 	
     private static final float TEXTURE_LAT_OFFSET = -0.2f;
     private static final float TEXTURE_LON_OFFSET = 2.8f;
@@ -132,12 +132,12 @@ public class EarthController {
     	
     	precision.setText("3");
     	
-    	l1.setText("< 0");
-    	l2.setText("< 0");
-    	l3.setText("< 0");
-    	l4.setText("< 0");
-    	l5.setText("< 0");
-    	l6.setText("< 0");
+    	L1.setText("< 0");
+    	L2.setText("< 0");
+    	L3.setText("< 0");
+    	L4.setText("< 0");
+    	L5.setText("< 0");
+    	L6.setText("< 0");
 
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
@@ -197,12 +197,12 @@ public class EarthController {
         		}
         		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), Integer.valueOf(precision.getText()));}
         		
-        			l1.setText("< " + computeLegend(signalements)[0]);
-        			l2.setText("< " + computeLegend(signalements)[1]);
-        			l3.setText("< " + computeLegend(signalements)[2]);
-        			l4.setText("< " + computeLegend(signalements)[3]);
-        			l5.setText("< " + computeLegend(signalements)[4]);
-        			l6.setText("< " + computeLegend(signalements)[5]);
+        			L1.setText("< " + computeLegend(signalements)[0]);
+        			L2.setText("< " + computeLegend(signalements)[1]);
+        			L3.setText("< " + computeLegend(signalements)[2]);
+        			L4.setText("< " + computeLegend(signalements)[3]);
+        			L5.setText("< " + computeLegend(signalements)[4]);
+        			L6.setText("< " + computeLegend(signalements)[5]);
         		
         			for (Pair<Integer,Region> pair : signalements) {
         			

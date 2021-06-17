@@ -18,6 +18,9 @@ Le but du projet est de créer une application de visualisation de donnée des a
 les données utilsé viennet de l'API : : https://api.obis.org/   
 Vous avez la possibilité de faire des recherches en lignes avec des requête, ou de tester un jeu de donnée en local. 
 
+### Intrerface
+
+![interface](https://github.com/Bilail/Projet-IHM-3D/blob/master/image/interface.PNG)
 
 
 ## Pré-requis 

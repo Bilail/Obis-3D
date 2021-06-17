@@ -107,7 +107,9 @@ public class EarthController {
 
     public void initialize() {
     	
-    	description.setEditable(false);
+    	//description.setEditable(false);
+    	
+    	precision.setText("3");
 
         //Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
@@ -136,6 +138,8 @@ public class EarthController {
         	@Override
         	public void handle(ActionEvent event) {
         		
+        		if(precision.getText().matches("[2-4]")) {
+        			
         		System.out.println(earth.getChildren());
         		earth.getChildren().subList(1, earth.getChildren().size()).clear();
         		System.out.println(earth.getChildren());
@@ -180,6 +184,12 @@ public class EarthController {
         			}
         			 description.setText(donnee.toString());
         		}
+        		else {
+        			
+            		System.out.println("precision invalide, essayez 2,3 ou 4");
+            	}
+        	}
+        	
         });
         
         

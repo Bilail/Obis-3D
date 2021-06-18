@@ -141,7 +141,7 @@ public class EarthController {
     	description.setEditable(false);
     	
     	//on initialise les donnée avec un fichier json local
-    	/*try (Reader reader = new FileReader("../Donnee/Delphinidae.json")){
+    	try (Reader reader = new FileReader("Delphinidae.json")){
     		BufferedReader rd = new BufferedReader(reader);
     		String JsonText = Json.readAll(rd);
     		JSONObject json = new JSONObject(JsonText);
@@ -150,7 +150,7 @@ public class EarthController {
     	}
     	catch (IOException e) {
     		e.printStackTrace();
-    	}*/
+    	}
     	
     	precision.setText("3");
     	

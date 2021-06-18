@@ -27,6 +27,7 @@ import Donnee.Signalement;
 import geohash.GeoHashHelper;
 import geohash.Location;
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -137,7 +138,7 @@ public class EarthController {
 
     public void initialize() throws FileNotFoundException, IOException {
     	
-    	//description.setEditable(false);
+    	description.setEditable(false);
     	
     	//on initialise les donnée avec un fichier json local
     	/*try (Reader reader = new FileReader("../Donnee/Delphinidae.json")){
@@ -293,13 +294,22 @@ public class EarthController {
         	@Override
         	public void handle(ActionEvent event) {
         		
-  
         		
         		// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
-    			if (dateFin.getValue() == null && nbrIntervalle != null && duree != null){
+    			if (dateFin.getValue() != null && dateFin.getValue()!=null){
     				
     				ArrayList<Object[]> intervalles = Json.nbSignalementsIntervalles(champRecherche.getText(), Integer.valueOf(precision.getText()), 
-    						 dateDebut.getValue(), Integer.valueOf(duree.getText()), Integer.valueOf(nbrIntervalle.getText()));
+    						 dateDebut.getValue(), 5, (dateFin.getValue().getYear()-dateDebut.getValue().getYear())/5);
+    				
+    				final long startNanoTime = System.nanoTime();
+    				
+    		        new AnimationTimer() {
+    		        	public void handle(long currentNanoTime) {
+    		        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+    		        		cubeVert.setRotationAxis(new Point3D(0,1,0));
+    		        		cubeVert.setRotate(100*t);
+    		        	}
+    		        }.start();
     			}
     			else {
     				
@@ -369,7 +379,7 @@ public class EarthController {
       	MeshView[] meshViews = objImporter.getImport();
       	earth = new Group(meshViews);
       	earth.setId("id");
-      	//root3D.getChildren().add(earth);
+      	root3D.getChildren().add(earth);
         root3D.setFocusTraversable(true);
 
 
@@ -399,25 +409,7 @@ public class EarthController {
 
       	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);*/
       	
-        Point3D from = geoCoordTo3dCoord(43.435555f, 5.213611f);
-        Box box = new Box(0.01f,0.01f,0.0002f*7100);
-        //box.setTranslateX(from.getX());
-        //box.setTranslateY(from.getY());
-        box.setTranslateZ(-box.getDepth()/2);
-        Point3D to = Point3D.ZERO;
-        
-        Point3D yDir = new Point3D(0, 1, 0);
-        
-        Affine affine = new Affine();
-        affine.append(lookAt(from,to,yDir));
-        
-        Group group = new Group();
-        group.getChildren().add(box);
-        
-        group.getTransforms().setAll(affine); 
-        earth.getChildren().addAll(group);
-
-        root3D.getChildren().addAll(earth);
+      
       	
       	
         // Add a camera group

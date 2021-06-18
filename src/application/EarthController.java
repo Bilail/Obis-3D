@@ -27,6 +27,7 @@ import Donnee.Signalement;
 import geohash.GeoHashHelper;
 import geohash.Location;
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -137,10 +138,10 @@ public class EarthController {
 
     public void initialize() throws FileNotFoundException, IOException {
     	
-    	//description.setEditable(false);
+    	description.setEditable(false);
     	
     	//on initialise les donnée avec un fichier json local
-    	try (Reader reader = new FileReader("../Donnee/Delphinidae.json")){
+    	/*try (Reader reader = new FileReader("../Donnee/Delphinidae.json")){
     		BufferedReader rd = new BufferedReader(reader);
     		String JsonText = Json.readAll(rd);
     		JSONObject json = new JSONObject(JsonText);
@@ -149,7 +150,7 @@ public class EarthController {
     	}
     	catch (IOException e) {
     		e.printStackTrace();
-    	}
+    	}*/
     	
     	precision.setText("3");
     	
@@ -167,10 +168,11 @@ public class EarthController {
         champRecherche.setOnKeyReleased(new EventHandler<KeyEvent>() {
         	@Override
         	public void handle(KeyEvent event) {	
-                	TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
+        		
+                	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
         			ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
             		combo.setItems(items);
-            		TextFields.bindAutoCompletion(champRecherche, items);
+            		//TextFields.bindAutoCompletion(champRecherche, items);
             		
             		
             		if (items.size() == 0 && champRecherche.getLength() > 0 ) {
@@ -201,82 +203,120 @@ public class EarthController {
         	@Override
         	public void handle(ActionEvent event) {
         		
-        		if(precision.getText().matches("[2-4]")) {
-        			
+        	if(precision.getText().matches("[2-4]")) {
+        		
         		System.out.println(earth.getChildren());
         		earth.getChildren().subList(1, earth.getChildren().size()).clear();
         		System.out.println(earth.getChildren());
-        		
+    		
         		ArrayList<Pair<Integer, Region>> signalements;
+        		
+        		if(nbrIntervalle.getText().isBlank() | duree.getText().isBlank()) {
 
-        		
-        		if(dateDebut.getValue()!=null) {
-        			System.out.println(dateDebut.getValue());
-        			
-        			// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
-        			if (dateFin.getValue() == null && nbrIntervalle != null && duree != null){
-        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateDebut.getValue() );
+	        		if(dateDebut.getValue()!=null) {
+	        			System.out.println(dateDebut.getValue());
+	        			
+	        			if(dateFin.getValue() !=null) {
+	        				System.out.println(dateFin.getValue());
+	        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());	
+	        			}
+	        			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), LocalDate.now());
+	        			}	
+	        		}
+	        		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), Integer.valueOf(precision.getText()));}
+	        		
+	        			L6.setText("< " + computeLegend(signalements)[0]);
+	        			L5.setText("< " + computeLegend(signalements)[1]);
+	        			L4.setText("< " + computeLegend(signalements)[2]);
+	        			L3.setText("< " + computeLegend(signalements)[3]);
+	        			L2.setText("< " + computeLegend(signalements)[4]);
+	        			L1.setText("< " + computeLegend(signalements)[5]);
+	        		
+	        			for (Pair<Integer,Region> signalement : signalements) {
+	        			
+	        				final PhongMaterial material = new PhongMaterial();
+	        			
+	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+	        			
+	        				Region region = signalement.getValue();
+	        			
+	        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
+	        				AddBarreHistogramme(earth,signalement,material);
+	        			}
+	        			StringBuilder donnee = new StringBuilder();
+	        			donnee.append("nbr d'occurence | point 3D \n");
+	        			for (Pair<Integer,Region> signalement : signalements) {
+	        				donnee.append("\n" + signalement.getKey().toString() + "\n"
+	        				+"\t" + signalement.getValue().getPoints()[0] +"\n\t" + signalement.getValue().getPoints()[1] + 
+	        				"\n\t" + signalement.getValue().getPoints()[2]+ "\n\t" + signalement.getValue().getPoints()[3]);	
+	        			}
+	        			description.setText(donnee.toString());
         			}
-        
-        			if(dateFin.getValue() !=null) {
-        				System.out.println(dateFin.getValue());
-        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());
-        				
-        				
-        				
-        			}
-        			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), LocalDate.now());}
-        		}
-        		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), Integer.valueOf(precision.getText()));}
-        		
-        			L6.setText("< " + computeLegend(signalements)[0]);
-        			L5.setText("< " + computeLegend(signalements)[1]);
-        			L4.setText("< " + computeLegend(signalements)[2]);
-        			L3.setText("< " + computeLegend(signalements)[3]);
-        			L2.setText("< " + computeLegend(signalements)[4]);
-        			L1.setText("< " + computeLegend(signalements)[5]);
-        		
-        			for (Pair<Integer,Region> pair : signalements) {
+        			else if (dateFin.getValue() == null && !nbrIntervalle.getText().isBlank() && !duree.getText().isBlank()){
+
+    					ArrayList<Object[]> intervalles = Json.nbSignalementsIntervalles(champRecherche.getText(), Integer.valueOf(precision.getText()), 
+   						 dateDebut.getValue(), Integer.valueOf(duree.getText()), Integer.valueOf(nbrIntervalle.getText()));
+    				
+    					StringBuilder donnee = new StringBuilder();
+    					donnee.append("nbr d'occurence | point 3D \n");
         			
-        				final PhongMaterial material = new PhongMaterial();
-        			
-        				if(pair.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.1));}
-        				else if(pair.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
-        				else if(pair.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-        				else if(pair.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-        				else if(pair.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
-        				else if(pair.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
-        			
-        				Region region = pair.getValue();
+    					for (Object[] intervalle : intervalles) {
+    						donnee.append("\n" + intervalle[0] + " / " + intervalle[1]);
+    						signalements=(ArrayList<Pair<Integer, Region>>) intervalle[2];
         				
-        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
-        				
-        			
-        			}
-        			StringBuilder donnee = new StringBuilder();
-        			donnee.append("nbr d'occurence | point 3D \n");
-        			for (Pair<Integer,Region> e : signalements) {
-        				donnee.append("\n" + e.getKey().toString() + "\n"
-        				+"\t" + e.getValue().getPoints()[0] +"\n\t" + e.getValue().getPoints()[1] + 
-        				"\n\t" + e.getValue().getPoints()[2]+ "\n\t" + e.getValue().getPoints()[3]);	
-        			}
-        			 description.setText(donnee.toString());
+        					for (Pair<Integer,Region> signalement : signalements) {
+        						donnee.append("\n" + signalement.getKey().toString() + "\n"
+        								+"\t" + signalement.getValue().getPoints()[0] +"\n\t" + signalement.getValue().getPoints()[1] + 
+        								"\n\t" + signalement.getValue().getPoints()[2]+ "\n\t" + signalement.getValue().getPoints()[3]);	
+        					}	
+    					}
+        			description.setText(donnee.toString());
+        			} 
         		}
         		else {
         			
             		Alert alert = new Alert(AlertType.WARNING);
             		alert.setTitle("Message d'alerte");
             		alert.setHeaderText("Erreur Precision GeoHash");
-            		alert.setContentText("précision invalise, merci de rentrer une valeur entre 2 et 4");
-            		//alert.initModality(Modality.NONE);
             		alert.initModality(Modality.APPLICATION_MODAL);
-
             		alert.showAndWait();	
- 
             	}
-        	}
-        	
+        	}	
         });
+        
+        
+        /*btnLecture.setOnAction( new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {
+        		
+        		
+        		// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
+    			if (dateFin.getValue() != null && dateFin.getValue()!=null){
+    				
+    				ArrayList<Object[]> intervalles = Json.nbSignalementsIntervalles(champRecherche.getText(), Integer.valueOf(precision.getText()), 
+    						 dateDebut.getValue(), 5, (dateFin.getValue().getYear()-dateDebut.getValue().getYear())/5);
+    				
+    				final long startNanoTime = System.nanoTime();
+    				
+    		        new AnimationTimer() {
+    		        	public void handle(long currentNanoTime) {
+    		        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+    		        		cubeVert.setRotationAxis(new Point3D(0,1,0));
+    		        		cubeVert.setRotate(100*t);
+    		        	}
+    		        }.start();
+    			}
+    			else {
+    				
+    			}
+        		
+        	}
+        });*/
         
         
         root3D.addEventHandler(MouseEvent.ANY, event ->{
@@ -313,23 +353,7 @@ public class EarthController {
         		alert.setResizable(true);
         		alert.setContentText(sb.toString());
         		alert.initModality(Modality.NONE);
-        		//alert.initModality(Modality.APPLICATION_MODAL);
-        		//alert.getDialogPane().setContent(description);
         		alert.showAndWait();
-        		
-        		/*Alert listespec = new Alert(AlertType.INFORMATION);
-        		listespec.setTitle("information sur la zone");
-        		listespec.setHeaderText("Espece présente dans la Zone");
-        		listespec.setResizable(true);
-        		//alert.setContentText(sb.toString());
-        		listespec.getDialogPane().setContent(listeEspeces);
-        		listespec.initModality(Modality.NONE);
-        		//alert.initModality(Modality.APPLICATION_MODAL);
-
-        		listespec.showAndWait();
-      			*/
-      			
-
       		}
       	});
         
@@ -385,25 +409,7 @@ public class EarthController {
 
       	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);*/
       	
-        /*Point3D from = geoCoordTo3dCoord(43.435555f, 5.213611f);
-        Box box = new Box(0.01f,0.01f,5.0f);
-        box.setTranslateX(from.getX());
-        box.setTranslateY(from.getY());
-        box.setTranslateZ(from.getZ());
-        Point3D to = Point3D.ZERO;
-        
-        Point3D yDir = new Point3D(0, 1, 0);
-        
-        Affine affine = new Affine();
-        affine.append(lookAt(from,to,yDir));
-        
-        Group group = new Group();
-        group.getChildren().add(box);
-        
-        group.getTransforms().setAll(affine); 
-        earth.getChildren().addAll(group);
-
-        root3D.getChildren().addAll(earth);*/
+      
       	
       	
         // Add a camera group
@@ -528,6 +534,26 @@ public class EarthController {
     							   geoCoordTo3dCoord(latitude, longitude).getZ());
     	
     	displayPoint3D(point,parent).setId(name);
+    }
+    
+    private void AddBarreHistogramme(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
+    	
+    	Point3D from = signalement.getValue().getPoints()[0];
+    	Point3D to = Point3D.ZERO;
+    	Point3D yDir = new Point3D(0, 1, 0);
+    	
+        Box box = new Box(0.01f,0.01f,0.0002f*signalement.getKey());
+        box.setTranslateZ(-box.getDepth()/2);
+        box.setMaterial(material);
+
+        Affine affine = new Affine();
+        affine.append(lookAt(from,to,yDir));
+        
+        Group group = new Group();
+        group.getChildren().add(box);
+        
+        group.getTransforms().setAll(affine);
+        parent.getChildren().addAll(group);
     }
 
     private void AddQuadrilateral(Group parent, Point3D topRight, Point3D bottomRight, Point3D bottomLeft,

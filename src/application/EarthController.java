@@ -290,33 +290,66 @@ public class EarthController {
         });
         
         
-        /*btnLecture.setOnAction( new EventHandler<ActionEvent>() {
+        btnLecture.setOnAction( new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent event) {
         		
         		
         		// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
-    			if (dateFin.getValue() != null && dateFin.getValue()!=null){
+    			if (dateDebut.getValue() != null && dateFin.getValue()!=null){
     				
-    				ArrayList<Object[]> intervalles = Json.nbSignalementsIntervalles(champRecherche.getText(), Integer.valueOf(precision.getText()), 
-    						 dateDebut.getValue(), 5, (dateFin.getValue().getYear()-dateDebut.getValue().getYear())/5);
+    				/*ArrayList<Object[]> intervalles = Json.nbSignalementsIntervalles(champRecherche.getText(), Integer.valueOf(precision.getText()), 
+    						 dateDebut.getValue(), 5, (dateFin.getValue().getYear()-dateDebut.getValue().getYear())/5);*/
     				
-    				final long startNanoTime = System.nanoTime();
+    				ArrayList<Pair<Integer, Region>> totalSignalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());
     				
-    		        new AnimationTimer() {
-    		        	public void handle(long currentNanoTime) {
-    		        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-    		        		cubeVert.setRotationAxis(new Point3D(0,1,0));
-    		        		cubeVert.setRotate(100*t);
-    		        	}
-    		        }.start();
+    				
+    				L6.setText("< " + computeLegend(totalSignalements)[0]);
+        			L5.setText("< " + computeLegend(totalSignalements)[1]);
+        			L4.setText("< " + computeLegend(totalSignalements)[2]);
+        			L3.setText("< " + computeLegend(totalSignalements)[3]);
+        			L2.setText("< " + computeLegend(totalSignalements)[4]);
+        			L1.setText("< " + computeLegend(totalSignalements)[5]);
+        			
+        			int anneeFin = dateFin.getValue().getYear() - (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
+      
+        			int annee1 = dateDebut.getValue().getYear();
+        			int annee2 = dateDebut.getValue().getYear()+5;
+        			
+        			while(annee2 <= anneeFin){
+        				
+        				ArrayList<Pair<Integer, Region>> signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(),
+        						Integer.valueOf(precision.getText()),
+        						LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()),
+        						LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
+        				
+        				
+        				for (Pair<Integer,Region> signalement : signalements) {
+    	        			
+	        				final PhongMaterial material = new PhongMaterial();
+	        			
+	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+	        			
+	        				Region region = signalement.getValue();
+	        			
+	        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
+	        				AddBarreHistogrammeAnimation(earth,signalement,material);
+	        			
+		    				
+        				}
+        			}
     			}
     			else {
     				
     			}
         		
         	}
-        });*/
+        });
         
         
         root3D.addEventHandler(MouseEvent.ANY, event ->{
@@ -409,7 +442,40 @@ public class EarthController {
 
       	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);*/
       	
-      
+      	Point3D from = geoCoordTo3dCoord(43.435555f, 5.213611f);
+    	Point3D to = Point3D.ZERO;
+    	Point3D yDir = new Point3D(0, 1, 0);
+    	
+        Box box = new Box(0.01f,0.01f,1.0f);
+        
+        
+        final long startNanoTime = System.nanoTime();
+        
+   
+
+        new AnimationTimer() {
+        	public void handle(long currentNanoTime) {
+        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+        		if(box.getScaleZ()<2.0f) {
+        		box.setScaleZ(0.1*t);
+        		}
+        	}
+        }.start();
+
+        
+        box.setTranslateZ((-box.getDepth()+box.getScaleZ())/2);
+
+        Affine affine = new Affine();
+        affine.append(lookAt(from,to,yDir));
+        
+        Group group = new Group();
+        group.getChildren().add(box);
+        
+        group.getTransforms().setAll(affine);
+        earth.getChildren().addAll(group);
+        
+		
+        
       	
       	
         // Add a camera group
@@ -496,6 +562,8 @@ public class EarthController {
 		return valeursLegende;
 
     }
+    
+    
 
     public static Point3D geoCoordTo3dCoord(float lat, float lon) {
         float lat_cor = lat + TEXTURE_LAT_OFFSET;
@@ -545,6 +613,41 @@ public class EarthController {
         Box box = new Box(0.01f,0.01f,0.0002f*signalement.getKey());
         box.setTranslateZ(-box.getDepth()/2);
         box.setMaterial(material);
+
+        Affine affine = new Affine();
+        affine.append(lookAt(from,to,yDir));
+        
+        Group group = new Group();
+        group.getChildren().add(box);
+        
+        group.getTransforms().setAll(affine);
+        parent.getChildren().addAll(group);
+    }
+    
+    private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
+    	
+
+    	
+    	Point3D from = signalement.getValue().getPoints()[0];
+    	Point3D to = Point3D.ZERO;
+    	Point3D yDir = new Point3D(0, 1, 0);
+    	
+        Box box = new Box(0.01f,0.01f,0.01f);
+        box.setMaterial(material);
+        
+        final long startNanoTime = System.nanoTime();
+        
+        new AnimationTimer() {
+        	public void handle(long currentNanoTime) {
+        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+        		while(box.getScaleZ()<0.0002f * signalement.getKey()) {
+        		box.setScaleZ(0.1*t);
+        		}
+        	}
+        }.start();
+        
+        box.setTranslateZ((-box.getDepth()+box.getScaleZ())/2);
+        
 
         Affine affine = new Affine();
         affine.append(lookAt(from,to,yDir));

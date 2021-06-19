@@ -149,9 +149,9 @@ public class Json {
 			for(int j=0; j<4; j++) {
 				
 				Point2D geoCoord = new Point2D(json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
-									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(0).floatValue(),
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(1).floatValue(),
 									           json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
-									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(1).floatValue());
+									           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(0).floatValue());
 				coords[j]=geoCoord;
 			}
 			

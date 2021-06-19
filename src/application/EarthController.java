@@ -237,7 +237,7 @@ public class EarthController {
 	        				final PhongMaterial material = new PhongMaterial();
 	        			
 	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
 	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
 	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
 	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
@@ -294,6 +294,9 @@ public class EarthController {
         	@Override
         	public void handle(ActionEvent event) {
         		
+        		System.out.println(earth.getChildren());
+        		earth.getChildren().subList(1, earth.getChildren().size()).clear();
+        		System.out.println(earth.getChildren());
         		
         		// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
     			if (dateDebut.getValue() != null && dateFin.getValue()!=null){
@@ -316,24 +319,26 @@ public class EarthController {
         			int annee1 = dateDebut.getValue().getYear();
         			int annee2 = dateDebut.getValue().getYear()+5;
         			
-        			while(annee2 <= anneeFin){
+        			//while(annee2 <= anneeFin){
         				
         				ArrayList<Pair<Integer, Region>> signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(),
         						Integer.valueOf(precision.getText()),
         						LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()),
         						LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
+        				System.out.println(LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
+        				System.out.println(LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
         				
         				
         				for (Pair<Integer,Region> signalement : signalements) {
-    	        			
+        					System.out.println(signalement);
 	        				final PhongMaterial material = new PhongMaterial();
 	        			
-	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(1.0, 0.8, 0.2, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+	        				if(signalement.getKey() <= computeLegend(totalSignalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
 	        			
 	        				Region region = signalement.getValue();
 	        			
@@ -342,8 +347,10 @@ public class EarthController {
 	        			
 		    				
         				}
+        				annee1=annee2;
+        				annee2=annee1 + 5;
         			}
-    			}
+    			//}
     			else {
     				
     			}
@@ -451,12 +458,12 @@ public class EarthController {
         
         final long startNanoTime = System.nanoTime();
         
-   
+        float n = 0.0002f*1800;
 
         new AnimationTimer() {
         	public void handle(long currentNanoTime) {
         		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-        		if(box.getScaleZ()<2.0f) {
+        		if(box.getScaleZ()<n) {
         		box.setScaleZ(0.1*t);
         		}
         	}
@@ -473,7 +480,7 @@ public class EarthController {
         
         group.getTransforms().setAll(affine);
         earth.getChildren().addAll(group);
-        
+        System.out.println(earth.getTransforms());
 		
         
       	
@@ -634,13 +641,13 @@ public class EarthController {
     	
         Box box = new Box(0.01f,0.01f,0.01f);
         box.setMaterial(material);
-        
+        System.out.println("test");
         final long startNanoTime = System.nanoTime();
         
         new AnimationTimer() {
         	public void handle(long currentNanoTime) {
         		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-        		while(box.getScaleZ()<0.0002f * signalement.getKey()) {
+        		if(box.getScaleZ()<0.0002f * signalement.getKey()) {
         		box.setScaleZ(0.1*t);
         		}
         	}
@@ -662,6 +669,7 @@ public class EarthController {
     private void AddQuadrilateral(Group parent, Point3D topRight, Point3D bottomRight, Point3D bottomLeft,
     		Point3D topLeft, PhongMaterial material) {
     	
+		System.out.println("test2");
     	final TriangleMesh triangleMesh = new TriangleMesh();
     	
     	final float[] points = {

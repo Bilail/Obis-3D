@@ -344,7 +344,7 @@ public class EarthController {
 	        			
 	        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
 	        				AddBarreHistogrammeAnimation(earth,signalement,material);
-	        			
+	        				
 		    				
         				}
         				annee1=annee2;
@@ -453,24 +453,27 @@ public class EarthController {
     	Point3D to = Point3D.ZERO;
     	Point3D yDir = new Point3D(0, 1, 0);
     	
-        Box box = new Box(0.01f,0.01f,1.0f);
-        
+        Box box = new Box(0.01f,0.01f,0.01f);
+        //box.setDepth(2);
         
         final long startNanoTime = System.nanoTime();
         
-        float n = 0.0002f*1800;
-
+        float n = 0.0002f*50000;
+        
         new AnimationTimer() {
         	public void handle(long currentNanoTime) {
         		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-        		if(box.getScaleZ()<n) {
-        		box.setScaleZ(0.1*t);
+        		
+        		if(box.getDepth()<n) {
+        			
+        		box.setDepth(box.getDepth() + t * 0.0001);
+        		box.setTranslateZ((-box.getDepth())/2);
         		}
         	}
         }.start();
-
         
-        box.setTranslateZ((-box.getDepth()+box.getScaleZ())/2);
+        
+        
 
         Affine affine = new Affine();
         affine.append(lookAt(from,to,yDir));
@@ -480,7 +483,8 @@ public class EarthController {
         
         group.getTransforms().setAll(affine);
         earth.getChildren().addAll(group);
-        System.out.println(earth.getTransforms());
+       
+        System.out.println(earth.getChildren().contains(group));
 		
         
       	
@@ -633,7 +637,7 @@ public class EarthController {
     
     private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
     	
-
+    	//if(parent.getChildren().get)
     	
     	Point3D from = signalement.getValue().getPoints()[0];
     	Point3D to = Point3D.ZERO;
@@ -642,18 +646,21 @@ public class EarthController {
         Box box = new Box(0.01f,0.01f,0.01f);
         box.setMaterial(material);
         System.out.println("test");
-        final long startNanoTime = System.nanoTime();
+ 
+        float n = 0.0001f*signalement.getKey();
         
         new AnimationTimer() {
         	public void handle(long currentNanoTime) {
-        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-        		if(box.getScaleZ()<0.0002f * signalement.getKey()) {
-        		box.setScaleZ(0.1*t);
+        		
+        		if(box.getDepth()<n) {
+        			
+        		box.setDepth(box.getDepth() + 0.0005);
+        		
         		}
         	}
         }.start();
         
-        box.setTranslateZ((-box.getDepth()+box.getScaleZ())/2);
+        box.setTranslateZ((-box.getDepth())/2);
         
 
         Affine affine = new Affine();

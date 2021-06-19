@@ -140,7 +140,7 @@ public class Json {
 		JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom.replace(" ", "%20") +
 				"&startdate=" + depart + "&enddate=" + arrivee);
 		
-		for(int i=0 ; i<20 ; i++) {
+		for(int i=0 ; i<json.getJSONArray("features").length() ; i++) {
 			
 			int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
 			

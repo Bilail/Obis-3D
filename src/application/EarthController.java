@@ -224,35 +224,37 @@ public class EarthController {
 	        		}
 	        		else { signalements = Json.nbSignalementsRegions(champRecherche.getText(), Integer.valueOf(precision.getText()));}
 	        		
-	        			L6.setText("< " + computeLegend(signalements)[0]);
-	        			L5.setText("< " + computeLegend(signalements)[1]);
-	        			L4.setText("< " + computeLegend(signalements)[2]);
-	        			L3.setText("< " + computeLegend(signalements)[3]);
-	        			L2.setText("< " + computeLegend(signalements)[4]);
-	        			L1.setText("< " + computeLegend(signalements)[5]);
+	        			int max = signalements.get(0).getKey();
+	        		
+	        			L6.setText("< " + computeLegend(max)[0]);
+	        			L5.setText("< " + computeLegend(max)[1]);
+	        			L4.setText("< " + computeLegend(max)[2]);
+	        			L3.setText("< " + computeLegend(max)[3]);
+	        			L2.setText("< " + computeLegend(max)[4]);
+	        			L1.setText("< " + computeLegend(max)[5]);
 	        			
 	        			StringBuilder donnee = new StringBuilder();
-	        			donnee.append("nbr d'occurence | point 3D \n");
+	        			donnee.append("nombre d'occurence | point 3D \n");
 	        		
 	        			for (Pair<Integer,Region> signalement : signalements) {
 	        			
 	        				final PhongMaterial material = new PhongMaterial();
 	        			
-	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+	        				if(signalement.getKey() <= computeLegend(max)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+	        				else if(signalement.getKey() <= computeLegend(max)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(max)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(max)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(max)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(max)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
 	        			
 	        				Region region = signalement.getValue();
 	        			
 	        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
-	        				AddBarreHistogrammeAnimation(earth,signalement,material);
+	        				AddBarreHistogrammeAnimation(earth,signalement,max,material);
 	        				
 	        				donnee.append("\n" + signalement.getKey().toString() + "\n"
-	    	        		+"\t" + signalement.getValue().getPoints()[0] +"\n\t" + signalement.getValue().getPoints()[1] + 
-	    	        		"\n\t" + signalement.getValue().getPoints()[2]+ "\n\t" + signalement.getValue().getPoints()[3]);
+	    	        		+"\t" + region.getPoints()[0] +"\n\t" + region.getPoints()[1] + 
+	    	        		"\n\t" + region.getPoints()[2]+ "\n\t" + region.getPoints()[3]);
 	        			}
 	        			description.setText(donnee.toString());
         			}
@@ -262,7 +264,7 @@ public class EarthController {
    						 dateDebut.getValue(), Integer.valueOf(duree.getText()), Integer.valueOf(nbrIntervalle.getText()));
     				
     					StringBuilder donnee = new StringBuilder();
-    					donnee.append("nbr d'occurence | point 3D \n");
+    					donnee.append("nombre d'occurence | annee | point 3D \n");
         			
     					for (Object[] intervalle : intervalles) {
     						donnee.append("\n" + intervalle[0] + " / " + intervalle[1]);
@@ -274,7 +276,7 @@ public class EarthController {
         								"\n\t" + signalement.getValue().getPoints()[2]+ "\n\t" + signalement.getValue().getPoints()[3]);	
         					}	
     					}
-        			description.setText(donnee.toString());
+    					description.setText(donnee.toString());
         			} 
         		}
         		else {
@@ -297,37 +299,24 @@ public class EarthController {
         		if (dateDebut.getValue() != null && dateFin.getValue()!=null){
         		
         			earth.getChildren().subList(1, earth.getChildren().size()).clear();
-
-        			/*int anneeFin = dateFin.getValue().getYear() - (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
-      
-        			int annee1 = dateDebut.getValue().getYear();
-        			int annee2 = dateDebut.getValue().getYear()+5;
-        			
-	        		ArrayList<Pair<Integer, Region>> signalements = new ArrayList<Pair<Integer,Region>>();*/
 	        		
 	        		final long startNanoTime = System.nanoTime();
-	        		
-	        		
-        			
-        			
-	                
+
 	                AnimationTimer timer = new AnimationTimer() {
 	                	
 	                	ArrayList<Pair<Integer, Region>> signalements = new ArrayList<Pair<Integer,Region>>();
-	                	
-	                	int anneeFin = dateFin.getValue().getYear()- (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
-	            	      
+
 	        			int annee1 = dateDebut.getValue().getYear();
 	        			int annee2 = dateDebut.getValue().getYear()+5;
 	                	
 	                	public void handle(long currentNanoTime) {
 	                		
 	                		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-	    	        		
-	    	        		if(annee2>anneeFin) {
+	                		System.out.println(t);
+	    	        		if(annee2>dateFin.getValue().getYear()) {
 	    	        			this.stop();
 	    	        		}
-	    	        		else if(t%10<=0.1) {
+	    	        		else if(t%13<=0.1) {
 	    	        			
 	    	        			earth.getChildren().subList(1, earth.getChildren().size()).clear();
 	                			System.out.println(annee1 +" "+ annee2);
@@ -337,31 +326,39 @@ public class EarthController {
 	            						LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()),
 	            						LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
 	                				
+	                				int max = signalements.get(0).getKey();
 	                				
+	                				L6.setText("< " + computeLegend(max)[0]);
+	                    			L5.setText("< " + computeLegend(max)[1]);
+	                    			L4.setText("< " + computeLegend(max)[2]);
+	                    			L3.setText("< " + computeLegend(max)[3]);
+	                    			L2.setText("< " + computeLegend(max)[4]);
+	                    			L1.setText("< " + computeLegend(max)[5]);
+	                				
+	                				StringBuilder donnee = new StringBuilder();
+	        	        			donnee.append("nombre d'occurence | annee | point 3D \n");
 	                			
 		                			for (Pair<Integer,Region> signalement : signalements) {
-		            					
-		            					L6.setText("< " + computeLegend(signalements)[0]);
-		                    			L5.setText("< " + computeLegend(signalements)[1]);
-		                    			L4.setText("< " + computeLegend(signalements)[2]);
-		                    			L3.setText("< " + computeLegend(signalements)[3]);
-		                    			L2.setText("< " + computeLegend(signalements)[4]);
-		                    			L1.setText("< " + computeLegend(signalements)[5]);
-		                    			
+
 		    	        				final PhongMaterial material = new PhongMaterial();
 		    	        			
-		    	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
-		    	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
-		    	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-		    	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-		    	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.4, 0.0, 0.3));}
-		    	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+		    	        				if(signalement.getKey() <= computeLegend(max)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+		    	        				else if(signalement.getKey() <= computeLegend(max)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
+		    	        				else if(signalement.getKey() <= computeLegend(max)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+		    	        				else if(signalement.getKey() <= computeLegend(max)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+		    	        				else if(signalement.getKey() <= computeLegend(max)[4]) {material.setDiffuseColor(new Color(1.0, 0.4, 0.0, 0.3));}
+		    	        				else if(signalement.getKey() <= computeLegend(max)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
 		    	        			
 		    	        				Region region = signalement.getValue();
 		    	        			
-		    	        				AddBarreHistogrammeAnimation(earth,signalement,material);
-		    		
+		    	        				AddBarreHistogrammeAnimation(earth,signalement,max,material);
+		    	        				
+		    	        				donnee.append("\n" + signalement.getKey().toString() + "entre : " + annee1 + "-" + annee2 + "\n"
+		    	    	    	        		+"\t" + region.getPoints()[0] +"\n\t" + region.getPoints()[1] + 
+		    	    	    	        		"\n\t" + region.getPoints()[2]+ "\n\t" + region.getPoints()[3]);
 		            				}
+		                			
+	    	        				description.setText(donnee.toString());
 		                			annee1=annee2;
 		            				annee2=annee1 + 5;
 	                		}
@@ -370,60 +367,6 @@ public class EarthController {
 	                };
 	                timer.start(); 
         		}
-        		
-    			/*if (dateDebut.getValue() != null && dateFin.getValue()!=null){
-
-            		earth.getChildren().subList(1, earth.getChildren().size()).clear();
-
-        			int anneeFin = dateFin.getValue().getYear() - (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
-      
-        			int annee1 = dateDebut.getValue().getYear();
-        			int annee2 = dateDebut.getValue().getYear()+5;
-        			
-        			
-        			
-        			while(annee2 <= anneeFin){
-        				
-        				if(timer.) {
-        					
-        				}
-        				
-        				
-        				System.out.println(LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
-        				System.out.println(LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
-        				
-        				
-        				for (Pair<Integer,Region> signalement : signalements) {
-        					
-        					L6.setText("< " + computeLegend(signalements)[0]);
-                			L5.setText("< " + computeLegend(signalements)[1]);
-                			L4.setText("< " + computeLegend(signalements)[2]);
-                			L3.setText("< " + computeLegend(signalements)[3]);
-                			L2.setText("< " + computeLegend(signalements)[4]);
-                			L1.setText("< " + computeLegend(signalements)[5]);
-                			
-	        				final PhongMaterial material = new PhongMaterial();
-	        			
-	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
-	        			
-	        				Region region = signalement.getValue();
-	        			
-	        				AddBarreHistogramme(earth,signalement,material);
-		
-        				}
-        				annee1=annee2;
-        				annee2=annee1 + 5;
-        			}
-    			}
-    			else {
-    				
-    			}*/
-        		
         	}
         });
         
@@ -491,71 +434,6 @@ public class EarthController {
       	root3D.getChildren().add(earth);
         root3D.setFocusTraversable(true);
 
-
-        // Draw city on the earth
-      	//displayPoint(root3D, "Brest",  -4.418539f,48.447911f);
-      	displayPoint(earth, "Marseille", 43.435555f, 5.213611f);
-      	/*displayPoint(root3D, "New York ", 40.639751f, -73.778925f);
-      	displayPoint(root3D, "Cape Town", -33.964806f, 18.601667f);
-      	displayPoint(root3D, "Istanbul", 40.976922f, 28.814606f);
-      	displayPoint(root3D, "Reykjavik", 64.13f, -21.940556f);
-      	displayPoint(root3D, "Singapore", 1.350189f, 103.994433f);
-      	displayPoint(root3D, "Seoul", 37.469075f, 126.450517f);
-      	
-      	final PhongMaterial redMaterial = new PhongMaterial();
-      	redMaterial.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));
-      	
-      	Point3D topRight = geoCoordTo3dCoord(48.447911f + 2,-4.418539f + 2);
-      	Point3D topLeft = geoCoordTo3dCoord(48.447911f - 2,-4.418539f + 2);
-      	Point3D bottomRight = geoCoordTo3dCoord(48.447911f + 2,-4.418539f - 2);
-      	Point3D bottomLeft = geoCoordTo3dCoord(48.447911f - 2,-4.418539f - 2);
-      	
-      	displayPoint3D(topRight, root3D);
-      	displayPoint3D(topLeft, root3D);
-      	displayPoint3D(bottomRight, root3D);
-      	displayPoint3D(bottomLeft, root3D);
-      	
-
-      	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);*/
-      	
-      	/*Point3D from = geoCoordTo3dCoord(43.435555f, 5.213611f);
-    	Point3D to = Point3D.ZERO;
-    	Point3D yDir = new Point3D(0, 1, 0);
-    	
-        Box box = new Box(0.01f,0.01f,0.01f);
-        //box.setDepth(2);
-        
-        final long startNanoTime = System.nanoTime();
-        
-        float n = 0.0002f*50000;
-        
-        new AnimationTimer() {
-        	public void handle(long currentNanoTime) {
-        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-        		System.out.println(t);
-        		if(box.getDepth()<n) {
-        			
-        		box.setDepth(t*0.05);
-        		box.setTranslateZ((-box.getDepth())/2);
-        		}
-        	}
-        }.start();
-
-
-        Affine affine = new Affine();
-        affine.append(lookAt(from,to,yDir));
-        
-        Group group = new Group();
-        group.getChildren().add(box);
-        
-        group.getTransforms().setAll(affine);
-        earth.getChildren().addAll(group);
-       
-        System.out.println(earth.getChildren().contains(group));
-		*/
-        
-      	
-      	
         // Add a camera group
         PerspectiveCamera camera = new PerspectiveCamera(true);
         new CameraManager(camera, pane3D, root3D);
@@ -578,12 +456,17 @@ public class EarthController {
         subscene.setCamera(camera);
         subscene.setFill(Color.GREY);
         pane3D.getChildren().addAll(subscene);
-        
-        
-        
 
     }
+    
+    public void displayPoint(Group parent, String name, float latitude, float longitude) {
 
+    	Point3D point= new Point3D(geoCoordTo3dCoord(latitude, longitude).getX(),
+    							   geoCoordTo3dCoord(latitude, longitude).getY(),
+    							   geoCoordTo3dCoord(latitude, longitude).getZ());
+    	
+    	displayPoint3D(point,parent).setId(name);
+    }
 
     public Group displayPoint3D(Point3D p, Group parent) {
     	
@@ -598,26 +481,6 @@ public class EarthController {
       	return parent;
     }
 
-    // From Rahel Lüthy : https://netzwerg.ch/blog/2015/03/22/javafx-3d-line/
-    public Cylinder createLine(Point3D origin, Point3D target) {
-        Point3D yAxis = new Point3D(0, 1, 0);
-        Point3D diff = target.subtract(origin);
-        double height = diff.magnitude();
-
-        Point3D mid = target.midpoint(origin);
-        Translate moveToMidpoint = new Translate(mid.getX(), mid.getY(), mid.getZ());
-
-        Point3D axisOfRotation = diff.crossProduct(yAxis);
-        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
-        Rotate rotateAroundCenter = new Rotate(-Math.toDegrees(angle), axisOfRotation);
-
-        Cylinder line = new Cylinder(0.01f, height);
-
-        line.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
-
-        return line;
-    }
-    
     public static Affine lookAt(Point3D from, Point3D to, Point3D ydir) {
     	
         Point3D zVec = to.subtract(from).normalize();
@@ -629,9 +492,7 @@ public class EarthController {
                           xVec.getZ(), yVec.getZ(), zVec.getZ(), from.getZ());
     }
     
-    public static int[] computeLegend(ArrayList<Pair<Integer,Region>> signalements) {
-    	
-    	int max = signalements.get(0).getKey();
+    public static int[] computeLegend(int max) {
 
     	int pas = max/6;
     	
@@ -640,8 +501,6 @@ public class EarthController {
 		return valeursLegende;
 
     }
-    
-    
 
     public static Point3D geoCoordTo3dCoord(float lat, float lon) {
         float lat_cor = lat + TEXTURE_LAT_OFFSET;
@@ -672,17 +531,16 @@ public class EarthController {
     	}
     	return new Point2D(lat,lon);
     }
-    
-    public void displayPoint(Group parent, String name, float latitude, float longitude) {
 
-    	Point3D point= new Point3D(geoCoordTo3dCoord(latitude, longitude).getX(),
-    							   geoCoordTo3dCoord(latitude, longitude).getY(),
-    							   geoCoordTo3dCoord(latitude, longitude).getZ());
+    
+    public Point3D calculerCentre(Pair<Integer,Region> signalement) {
     	
-    	displayPoint3D(point,parent).setId(name);
+    	Point3D centre = signalement.getValue().getPoints()[0].midpoint(signalement.getValue().getPoints()[2]);
+    	
+    	return centre;
     }
     
-    private void AddBarreHistogramme(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
+    /*private void AddBarreHistogramme(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
     	
     	Point3D from = signalement.getValue().getPoints()[0];
     	Point3D to = Point3D.ZERO;
@@ -700,21 +558,22 @@ public class EarthController {
         
         group.getTransforms().setAll(affine);
         parent.getChildren().add(group);
-    }
+    }*/
     
-    private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
+    private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, int max, PhongMaterial material) {
     	
     	
     	
-    	Point3D from = signalement.getValue().getPoints()[0];
+    	Point3D from = calculerCentre(signalement);// signalement.getValue().getPoints()[0];
     	Point3D to = Point3D.ZERO;
     	Point3D yDir = new Point3D(0, 1, 0);
     	
         Box box = new Box(0.01f,0.01f,0.01f);
         box.setMaterial(material);
-
+        
+        
  
-        float n = 0.0001f*signalement.getKey();
+        float n = 0.0001f*signalement.getKey()*8000/max;
         
         final long startNanoTime = System.nanoTime();
         
@@ -725,7 +584,7 @@ public class EarthController {
         		
         		if(box.getDepth()<n) {
         			
-        		box.setDepth(t*0.05);
+        		box.setDepth(t*0.07);
         		box.setTranslateZ((-box.getDepth())/2);
 
         		}

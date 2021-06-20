@@ -294,32 +294,25 @@ public class EarthController {
         	@Override
         	public void handle(ActionEvent event) {
         		
-        		System.out.println(earth.getChildren());
-        		earth.getChildren().subList(1, earth.getChildren().size()).clear();
-        		System.out.println(earth.getChildren());
+        		
         		
         		// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
     			if (dateDebut.getValue() != null && dateFin.getValue()!=null){
     				
-    				/*ArrayList<Object[]> intervalles = Json.nbSignalementsIntervalles(champRecherche.getText(), Integer.valueOf(precision.getText()), 
-    						 dateDebut.getValue(), 5, (dateFin.getValue().getYear()-dateDebut.getValue().getYear())/5);*/
-    				
-    				ArrayList<Pair<Integer, Region>> totalSignalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());
-    				
-    				
-    				L6.setText("< " + computeLegend(totalSignalements)[0]);
-        			L5.setText("< " + computeLegend(totalSignalements)[1]);
-        			L4.setText("< " + computeLegend(totalSignalements)[2]);
-        			L3.setText("< " + computeLegend(totalSignalements)[3]);
-        			L2.setText("< " + computeLegend(totalSignalements)[4]);
-        			L1.setText("< " + computeLegend(totalSignalements)[5]);
-        			
+    				System.out.println(earth.getChildren());
+            		earth.getChildren().subList(1, earth.getChildren().size()).clear();
+            		System.out.println(earth.getChildren());
+            		
+            		boolean animationEnCours = false;
+
         			int anneeFin = dateFin.getValue().getYear() - (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
       
         			int annee1 = dateDebut.getValue().getYear();
         			int annee2 = dateDebut.getValue().getYear()+5;
         			
-        			//while(annee2 <= anneeFin){
+        			while(annee2 <= anneeFin & animationEnCours==false ){
+        			
+	        			
         				
         				ArrayList<Pair<Integer, Region>> signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(),
         						Integer.valueOf(precision.getText()),
@@ -330,27 +323,35 @@ public class EarthController {
         				
         				
         				for (Pair<Integer,Region> signalement : signalements) {
-        					System.out.println(signalement);
+        					
+        					L6.setText("< " + computeLegend(signalements)[0]);
+                			L5.setText("< " + computeLegend(signalements)[1]);
+                			L4.setText("< " + computeLegend(signalements)[2]);
+                			L3.setText("< " + computeLegend(signalements)[3]);
+                			L2.setText("< " + computeLegend(signalements)[4]);
+                			L1.setText("< " + computeLegend(signalements)[5]);
+                			
 	        				final PhongMaterial material = new PhongMaterial();
 	        			
-	        				if(signalement.getKey() <= computeLegend(totalSignalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
-	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
-	        				else if(signalement.getKey() <= computeLegend(totalSignalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
+	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
 	        			
 	        				Region region = signalement.getValue();
 	        			
-	        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
-	        				AddBarreHistogrammeAnimation(earth,signalement,material);
+	        				//AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
+	        				animationEnCours=AddBarreHistogrammeAnimation(earth,signalement,material);
+	        				//wait();
 	        				
 		    				
         				}
         				annee1=annee2;
         				annee2=annee1 + 5;
         			}
-    			//}
+    			}
     			else {
     				
     			}
@@ -466,14 +467,12 @@ public class EarthController {
         		
         		if(box.getDepth()<n) {
         			
-        		box.setDepth(box.getDepth() + t * 0.0001);
+        		box.setDepth(box.getDepth() + 0.0005);
         		box.setTranslateZ((-box.getDepth())/2);
         		}
         	}
         }.start();
-        
-        
-        
+
 
         Affine affine = new Affine();
         affine.append(lookAt(from,to,yDir));
@@ -635,9 +634,11 @@ public class EarthController {
         parent.getChildren().addAll(group);
     }
     
-    private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
+    private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, PhongMaterial material, boolean animationEnCours) {
     	
     	//if(parent.getChildren().get)
+    	
+    	
     	
     	Point3D from = signalement.getValue().getPoints()[0];
     	Point3D to = Point3D.ZERO;
@@ -645,22 +646,29 @@ public class EarthController {
     	
         Box box = new Box(0.01f,0.01f,0.01f);
         box.setMaterial(material);
-        System.out.println("test");
+        //System.out.println("test");
  
-        float n = 0.0001f*signalement.getKey();
+        float n = 0.0005f*signalement.getKey();
         
-        new AnimationTimer() {
+       new AnimationTimer() {
         	public void handle(long currentNanoTime) {
         		
         		if(box.getDepth()<n) {
         			
         		box.setDepth(box.getDepth() + 0.0005);
-        		
+        		box.setTranslateZ((-box.getDepth())/2);
+        		animationEnCours=true;
         		}
+        		else {
+        			animationEnCours=false;
+        		}
+        		
         	}
         }.start();
         
-        box.setTranslateZ((-box.getDepth())/2);
+      
+        
+        
         
 
         Affine affine = new Affine();
@@ -671,12 +679,12 @@ public class EarthController {
         
         group.getTransforms().setAll(affine);
         parent.getChildren().addAll(group);
+        
     }
 
     private void AddQuadrilateral(Group parent, Point3D topRight, Point3D bottomRight, Point3D bottomLeft,
     		Point3D topLeft, PhongMaterial material) {
     	
-		System.out.println("test2");
     	final TriangleMesh triangleMesh = new TriangleMesh();
     	
     	final float[] points = {

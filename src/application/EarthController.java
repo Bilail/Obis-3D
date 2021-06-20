@@ -134,7 +134,6 @@ public class EarthController {
     private static final float TEXTURE_OFFSET = 1.01f;
     
     public Group earth;
-    
 
     public void initialize() throws FileNotFoundException, IOException {
     	
@@ -231,6 +230,9 @@ public class EarthController {
 	        			L3.setText("< " + computeLegend(signalements)[3]);
 	        			L2.setText("< " + computeLegend(signalements)[4]);
 	        			L1.setText("< " + computeLegend(signalements)[5]);
+	        			
+	        			StringBuilder donnee = new StringBuilder();
+	        			donnee.append("nbr d'occurence | point 3D \n");
 	        		
 	        			for (Pair<Integer,Region> signalement : signalements) {
 	        			
@@ -246,14 +248,11 @@ public class EarthController {
 	        				Region region = signalement.getValue();
 	        			
 	        				AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
-	        				AddBarreHistogramme(earth,signalement,material);
-	        			}
-	        			StringBuilder donnee = new StringBuilder();
-	        			donnee.append("nbr d'occurence | point 3D \n");
-	        			for (Pair<Integer,Region> signalement : signalements) {
+	        				AddBarreHistogrammeAnimation(earth,signalement,material);
+	        				
 	        				donnee.append("\n" + signalement.getKey().toString() + "\n"
-	        				+"\t" + signalement.getValue().getPoints()[0] +"\n\t" + signalement.getValue().getPoints()[1] + 
-	        				"\n\t" + signalement.getValue().getPoints()[2]+ "\n\t" + signalement.getValue().getPoints()[3]);	
+	    	        		+"\t" + signalement.getValue().getPoints()[0] +"\n\t" + signalement.getValue().getPoints()[1] + 
+	    	        		"\n\t" + signalement.getValue().getPoints()[2]+ "\n\t" + signalement.getValue().getPoints()[3]);
 	        			}
 	        			description.setText(donnee.toString());
         			}
@@ -291,33 +290,105 @@ public class EarthController {
         
         
         btnLecture.setOnAction( new EventHandler<ActionEvent>() {
+        	
         	@Override
         	public void handle(ActionEvent event) {
         		
+        		if (dateDebut.getValue() != null && dateFin.getValue()!=null){
         		
+        			earth.getChildren().subList(1, earth.getChildren().size()).clear();
+
+        			/*int anneeFin = dateFin.getValue().getYear() - (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
+      
+        			int annee1 = dateDebut.getValue().getYear();
+        			int annee2 = dateDebut.getValue().getYear()+5;
+        			
+	        		ArrayList<Pair<Integer, Region>> signalements = new ArrayList<Pair<Integer,Region>>();*/
+	        		
+	        		final long startNanoTime = System.nanoTime();
+	        		
+	        		
+        			
+        			
+	                
+	                AnimationTimer timer = new AnimationTimer() {
+	                	
+	                	ArrayList<Pair<Integer, Region>> signalements = new ArrayList<Pair<Integer,Region>>();
+	                	
+	                	int anneeFin = dateFin.getValue().getYear()- (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
+	            	      
+	        			int annee1 = dateDebut.getValue().getYear();
+	        			int annee2 = dateDebut.getValue().getYear()+5;
+	                	
+	                	public void handle(long currentNanoTime) {
+	                		
+	                		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+	    	        		
+	    	        		if(annee2>anneeFin) {
+	    	        			this.stop();
+	    	        		}
+	    	        		else if(t%10<=0.1) {
+	    	        			
+	    	        			earth.getChildren().subList(1, earth.getChildren().size()).clear();
+	                			System.out.println(annee1 +" "+ annee2);
+	                			
+	                				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(),
+	            						Integer.valueOf(precision.getText()),
+	            						LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()),
+	            						LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
+	                				
+	                				
+	                			
+		                			for (Pair<Integer,Region> signalement : signalements) {
+		            					
+		            					L6.setText("< " + computeLegend(signalements)[0]);
+		                    			L5.setText("< " + computeLegend(signalements)[1]);
+		                    			L4.setText("< " + computeLegend(signalements)[2]);
+		                    			L3.setText("< " + computeLegend(signalements)[3]);
+		                    			L2.setText("< " + computeLegend(signalements)[4]);
+		                    			L1.setText("< " + computeLegend(signalements)[5]);
+		                    			
+		    	        				final PhongMaterial material = new PhongMaterial();
+		    	        			
+		    	        				if(signalement.getKey() <= computeLegend(signalements)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+		    	        				else if(signalement.getKey() <= computeLegend(signalements)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
+		    	        				else if(signalement.getKey() <= computeLegend(signalements)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+		    	        				else if(signalement.getKey() <= computeLegend(signalements)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+		    	        				else if(signalement.getKey() <= computeLegend(signalements)[4]) {material.setDiffuseColor(new Color(1.0, 0.4, 0.0, 0.3));}
+		    	        				else if(signalement.getKey() <= computeLegend(signalements)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+		    	        			
+		    	        				Region region = signalement.getValue();
+		    	        			
+		    	        				AddBarreHistogrammeAnimation(earth,signalement,material);
+		    		
+		            				}
+		                			annee1=annee2;
+		            				annee2=annee1 + 5;
+	                		}
+	                	}
+	                	
+	                };
+	                timer.start(); 
+        		}
         		
-        		// Ici il faut faire en sorte que on ai date de début + n * duree/nbrIntervalle pour passer au donné nième
-    			if (dateDebut.getValue() != null && dateFin.getValue()!=null){
-    				
-    				System.out.println(earth.getChildren());
+    			/*if (dateDebut.getValue() != null && dateFin.getValue()!=null){
+
             		earth.getChildren().subList(1, earth.getChildren().size()).clear();
-            		System.out.println(earth.getChildren());
-            		
-            		boolean animationEnCours = false;
 
         			int anneeFin = dateFin.getValue().getYear() - (dateFin.getValue().getYear()-dateDebut.getValue().getYear())%5;
       
         			int annee1 = dateDebut.getValue().getYear();
         			int annee2 = dateDebut.getValue().getYear()+5;
         			
-        			while(annee2 <= anneeFin & animationEnCours==false ){
         			
-	        			
+        			
+        			while(annee2 <= anneeFin){
         				
-        				ArrayList<Pair<Integer, Region>> signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(),
-        						Integer.valueOf(precision.getText()),
-        						LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()),
-        						LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
+        				if(timer.) {
+        					
+        				}
+        				
+        				
         				System.out.println(LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
         				System.out.println(LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
         				
@@ -342,11 +413,8 @@ public class EarthController {
 	        			
 	        				Region region = signalement.getValue();
 	        			
-	        				//AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
-	        				animationEnCours=AddBarreHistogrammeAnimation(earth,signalement,material);
-	        				//wait();
-	        				
-		    				
+	        				AddBarreHistogramme(earth,signalement,material);
+		
         				}
         				annee1=annee2;
         				annee2=annee1 + 5;
@@ -354,7 +422,7 @@ public class EarthController {
     			}
     			else {
     				
-    			}
+    			}*/
         		
         	}
         });
@@ -450,7 +518,7 @@ public class EarthController {
 
       	AddQuadrilateral(root3D,topLeft ,bottomLeft , bottomRight,topRight , redMaterial);*/
       	
-      	Point3D from = geoCoordTo3dCoord(43.435555f, 5.213611f);
+      	/*Point3D from = geoCoordTo3dCoord(43.435555f, 5.213611f);
     	Point3D to = Point3D.ZERO;
     	Point3D yDir = new Point3D(0, 1, 0);
     	
@@ -464,10 +532,10 @@ public class EarthController {
         new AnimationTimer() {
         	public void handle(long currentNanoTime) {
         		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-        		
+        		System.out.println(t);
         		if(box.getDepth()<n) {
         			
-        		box.setDepth(box.getDepth() + 0.0005);
+        		box.setDepth(t*0.05);
         		box.setTranslateZ((-box.getDepth())/2);
         		}
         	}
@@ -484,7 +552,7 @@ public class EarthController {
         earth.getChildren().addAll(group);
        
         System.out.println(earth.getChildren().contains(group));
-		
+		*/
         
       	
       	
@@ -631,12 +699,10 @@ public class EarthController {
         group.getChildren().add(box);
         
         group.getTransforms().setAll(affine);
-        parent.getChildren().addAll(group);
+        parent.getChildren().add(group);
     }
     
-    private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, PhongMaterial material, boolean animationEnCours) {
-    	
-    	//if(parent.getChildren().get)
+    private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
     	
     	
     	
@@ -646,30 +712,25 @@ public class EarthController {
     	
         Box box = new Box(0.01f,0.01f,0.01f);
         box.setMaterial(material);
-        //System.out.println("test");
+
  
-        float n = 0.0005f*signalement.getKey();
+        float n = 0.0001f*signalement.getKey();
         
-       new AnimationTimer() {
+        final long startNanoTime = System.nanoTime();
+        
+        new AnimationTimer() {
         	public void handle(long currentNanoTime) {
+        		
+        		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
         		
         		if(box.getDepth()<n) {
         			
-        		box.setDepth(box.getDepth() + 0.0005);
+        		box.setDepth(t*0.05);
         		box.setTranslateZ((-box.getDepth())/2);
-        		animationEnCours=true;
+
         		}
-        		else {
-        			animationEnCours=false;
-        		}
-        		
         	}
         }.start();
-        
-      
-        
-        
-        
 
         Affine affine = new Affine();
         affine.append(lookAt(from,to,yDir));

@@ -134,22 +134,16 @@ public class EarthController {
     private static final float TEXTURE_OFFSET = 1.01f;
     
     public Group earth;
+    
+    public boolean stop;
+    
+    public boolean pause;
 
     public void initialize() throws FileNotFoundException, IOException {
     	
     	description.setEditable(false);
     	
-    	//on initialise les donnée avec un fichier json local
-    	try (Reader reader = new FileReader("Delphinidae.json")){
-    		BufferedReader rd = new BufferedReader(reader);
-    		String JsonText = Json.readAll(rd);
-    		JSONObject json = new JSONObject(JsonText);
-    		
-    		//parcer le json pour afficher les données	
-    	}
-    	catch (IOException e) {
-    		e.printStackTrace();
-    	}
+    	
     	
     	precision.setText("3");
     	
@@ -312,8 +306,8 @@ public class EarthController {
 	                	public void handle(long currentNanoTime) {
 	                		
 	                		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-	                		System.out.println(t);
-	    	        		if(annee2>dateFin.getValue().getYear()) {
+	                		System.out.println(stop);
+	    	        		if(annee2>dateFin.getValue().getYear() | stop==true) {
 	    	        			this.stop();
 	    	        		}
 	    	        		else if(t%13<=0.1) {
@@ -353,7 +347,7 @@ public class EarthController {
 		    	        			
 		    	        				AddBarreHistogrammeAnimation(earth,signalement,max,material);
 		    	        				
-		    	        				donnee.append("\n" + signalement.getKey().toString() + "entre : " + annee1 + "-" + annee2 + "\n"
+		    	        				donnee.append("\n" + signalement.getKey().toString() + " entre : " + annee1 + "-" + annee2 + "\n"
 		    	    	    	        		+"\t" + region.getPoints()[0] +"\n\t" + region.getPoints()[1] + 
 		    	    	    	        		"\n\t" + region.getPoints()[2]+ "\n\t" + region.getPoints()[3]);
 		            				}
@@ -370,6 +364,20 @@ public class EarthController {
         	}
         });
         
+        btnPause.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {	
+                	
+        			pause=true;
+        	}
+        });
+        
+        btnStop.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {	
+        			stop=true;
+        	}
+        });
         
         root3D.addEventHandler(MouseEvent.ANY, event ->{
       		if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {

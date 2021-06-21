@@ -102,6 +102,46 @@ public class Json {
 		return new JSONArray(json);
 	}
 	
+	public static ArrayList<Pair<Integer,Region>> JsonFile (String filename){
+		
+		ArrayList<Pair<Integer, Region>> nbParRegions = new ArrayList<Pair<Integer, Region>>();
+			
+		try(Reader reader = new FileReader(filename)) {
+			
+			BufferedReader rd = new BufferedReader(reader);
+			String jsonText = readAll(rd);
+			JSONObject json = new JSONObject(jsonText);
+			
+			for(int i=0 ; i<json.getJSONArray("features").length() ; i++) {
+				
+				int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
+				
+				Point2D[] coords= {null,null,null,null};
+				
+				for(int j=0; j<4; j++) {
+					
+					Point2D geoCoord = new Point2D(json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
+										           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(1).floatValue(),
+										           json.getJSONArray("features").getJSONObject(i).getJSONObject("geometry")
+										           .getJSONArray("coordinates").getJSONArray(0).getJSONArray(j).getBigDecimal(0).floatValue());
+					coords[j]=geoCoord;
+				}
+				
+				Region region = new Region(coords);
+				
+				Pair<Integer, Region> nbRegion = new Pair<Integer, Region>(nb,region);
+
+				nbParRegions.add(nbRegion);
+
+			}
+			return nbParRegions;	
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return nbParRegions;
+	}
+	
 	public static ArrayList<Pair<Integer, Region>> nbSignalementsRegions(String nom, int precision){
 		
 		ArrayList<Pair<Integer, Region>> nbParRegions = new ArrayList<Pair<Integer, Region>>();

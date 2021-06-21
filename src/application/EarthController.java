@@ -169,6 +169,7 @@ public class EarthController {
             		combo.setItems(items);
             		//TextFields.bindAutoCompletion(champRecherche, items);
             		
+            		stop=false;
             		
             		if (items.size() == 0 && champRecherche.getLength() > 0 ) {
             			
@@ -310,8 +311,14 @@ public class EarthController {
 	                	public void handle(long currentNanoTime) {
 	                		
 	                		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-	                		System.out.println(annee2);
+	                		//System.out.println(annee2);
 	    	        		if(annee2>dateFin.getValue().getYear() | pause==true | stop==true) {
+	    	        			if(annee2>dateFin.getValue().getYear()) {
+	    	        				nbPas=0;
+	    	        			}
+	    	        			/*if(stop==true) {
+	    	        				
+	    	        			}*/
 	    	        			this.stop();
 	    	        		}
 	    	        		else if(t%13<=0.1) {
@@ -358,8 +365,8 @@ public class EarthController {
 		                			
 	    	        				description.setText(donnee.toString());
 	    	        				nbPas=nbPas+1;
-		                			annee1=annee1+5*nbPas;
-		            				annee2=annee2+6*nbPas;
+		                			annee1=annee1+5;
+		            				annee2=annee2+5;
 	                		}
 	                	}
 	                	
@@ -379,7 +386,13 @@ public class EarthController {
         btnStop.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent event) {	
-        			stop=true;
+        		stop=true;
+        		nbPas=0;
+        		earth.getChildren().subList(1, earth.getChildren().size()).clear();
+        		champRecherche.setText("");
+        		combo.getItems().clear();
+        		dateDebut.getEditor().clear();
+        		dateFin.getEditor().clear();
         	}
         });
         
@@ -396,7 +409,7 @@ public class EarthController {
         			nbPas=0;
         	}
         });*/
-        
+       
         root3D.addEventHandler(MouseEvent.ANY, event ->{
       		if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {
       			

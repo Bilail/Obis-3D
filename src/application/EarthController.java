@@ -135,9 +135,11 @@ public class EarthController {
     
     public Group earth;
     
-    public boolean stop;
+    public boolean stop=false;
     
-    public boolean pause;
+    public boolean pause=false;
+    
+    public int nbPas;
 
     public void initialize() throws FileNotFoundException, IOException {
     	
@@ -291,6 +293,8 @@ public class EarthController {
         	public void handle(ActionEvent event) {
         		
         		if (dateDebut.getValue() != null && dateFin.getValue()!=null){
+        			
+        			pause=false;
         		
         			earth.getChildren().subList(1, earth.getChildren().size()).clear();
 	        		
@@ -300,14 +304,14 @@ public class EarthController {
 	                	
 	                	ArrayList<Pair<Integer, Region>> signalements = new ArrayList<Pair<Integer,Region>>();
 
-	        			int annee1 = dateDebut.getValue().getYear();
-	        			int annee2 = dateDebut.getValue().getYear()+5;
+	        			int annee1 = dateDebut.getValue().getYear()+5*nbPas;
+	        			int annee2 = annee1+5;
 	                	
 	                	public void handle(long currentNanoTime) {
 	                		
 	                		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
 	                		System.out.println(stop);
-	    	        		if(annee2>dateFin.getValue().getYear() | stop==true) {
+	    	        		if(annee2>dateFin.getValue().getYear() | pause==true | stop==true) {
 	    	        			this.stop();
 	    	        		}
 	    	        		else if(t%13<=0.1) {
@@ -353,7 +357,8 @@ public class EarthController {
 		            				}
 		                			
 	    	        				description.setText(donnee.toString());
-		                			annee1=annee2;
+	    	        				nbPas=nbPas+1;
+		                			annee1=annee1+5*nbPas;
 		            				annee2=annee1 + 5;
 	                		}
 	                	}
@@ -367,8 +372,7 @@ public class EarthController {
         btnPause.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent event) {	
-                	
-        			pause=true;
+        		pause=true;
         	}
         });
         

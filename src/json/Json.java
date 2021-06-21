@@ -113,9 +113,9 @@ public class Json {
 			JSONObject json = new JSONObject(jsonText);
 			
 			for(int i=0 ; i<json.getJSONArray("features").length() ; i++) {
-				
+
 				int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
-				
+
 				Point2D[] coords= {null,null,null,null};
 				
 				for(int j=0; j<4; j++) {
@@ -132,9 +132,7 @@ public class Json {
 				Pair<Integer, Region> nbRegion = new Pair<Integer, Region>(nb,region);
 
 				nbParRegions.add(nbRegion);
-
-			}
-			return nbParRegions;	
+			}	
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -319,13 +317,13 @@ public class Json {
 	public static void main(String[] args) {
 		
 		
-		int precision = 3;
-		String nom = "Delphinidae";
+		//int precision = 3;
+		//String nom = "Delphinidae";
 		//JSONObject json=readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/" + precision + "?scientificname=" + nom);
 		//System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0));
 		//System.out.println(json.getJSONArray("features").getJSONObject(0).getJSONObject("properties").getInt("n"));
 		
-		ArrayList<Pair<Integer, Region>> resultat1 = nbSignalementsRegions("Delphinidae",3);
+		/*ArrayList<Pair<Integer, Region>> resultat1 = nbSignalementsRegions("Delphinidae",3);
 		System.out.println(resultat1 + "\n");
 		
 		ArrayList<Pair<Integer, Region>> resultat2 = nbSignalementsRegionsDate("Delphinidae",3,LocalDate.of(2016, 6, 15),LocalDate.of(2018,6,14));
@@ -345,7 +343,12 @@ public class Json {
 
 
 		ArrayList<String> resultat5 = completerNoms("delphi");
-		System.out.println(resultat5.get(0));
+		System.out.println(resultat5.get(0));*/
+		
+		//ArrayList<Pair<Integer, Region>> resultat6=JsonFile("Delphinidae.json");
+		//System.out.println(resultat6.get(0));
+		//System.out.println(resultat6);
+		//System.out.println(resultat6);
 		
 	}
 	

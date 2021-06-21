@@ -1,5 +1,12 @@
 # Projet-IHM-3D
 
+
+![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
+![Language](https://img.shields.io/badge/Language-Java-ff9214)
+![size](https://img.shields.io/badge/Size-17Mo-f12222)
+![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
+
+
 ## Description 
 Le but du projet est de créer une application de visualisation de donnée des annimaux marins. 
 

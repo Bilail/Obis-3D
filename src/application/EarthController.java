@@ -310,7 +310,7 @@ public class EarthController {
 	                	public void handle(long currentNanoTime) {
 	                		
 	                		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-	                		System.out.println(stop);
+	                		System.out.println(annee2);
 	    	        		if(annee2>dateFin.getValue().getYear() | pause==true | stop==true) {
 	    	        			this.stop();
 	    	        		}
@@ -359,7 +359,7 @@ public class EarthController {
 	    	        				description.setText(donnee.toString());
 	    	        				nbPas=nbPas+1;
 		                			annee1=annee1+5*nbPas;
-		            				annee2=annee1 + 5;
+		            				annee2=annee2+6*nbPas;
 	                		}
 	                	}
 	                	
@@ -382,6 +382,20 @@ public class EarthController {
         			stop=true;
         	}
         });
+        
+        /*dateDebut.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {	
+        			nbPas=0;
+        	}
+        });
+        
+        dateFin.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {	
+        			nbPas=0;
+        	}
+        });*/
         
         root3D.addEventHandler(MouseEvent.ANY, event ->{
       		if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {

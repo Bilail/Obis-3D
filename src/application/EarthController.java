@@ -143,21 +143,87 @@ public class EarthController {
 
     public void initialize() throws FileNotFoundException, IOException {
     	
-    	description.setEditable(false);
-    	
-    	
-    	
-    	precision.setText("3");
-    	
-    	L1.setText("< 0");
-    	L2.setText("< 0");
-    	L3.setText("< 0");
-    	L4.setText("< 0");
-    	L5.setText("< 0");
-    	L6.setText("< 0");
+		ObjModelImporter objImporter = new ObjModelImporter();
+		
+		//Create a Pane et graph scene root for the 3D content
+		Group root3D = new Group();
+      	
+      	try {
+      		URL modelUrl = this.getClass().getResource("Earth/earth.obj");
+      		objImporter.read(modelUrl);
+      	}
+      	catch (ImportException e) {
+      		System.out.println(e.getMessage());
+      	}
+      	
+      	MeshView[] meshViews = objImporter.getImport();
+      	earth = new Group(meshViews);
+      	root3D.getChildren().add(earth);
+        root3D.setFocusTraversable(true);
 
-        //Create a Pane et graph scene root for the 3D content
-        Group root3D = new Group();
+        // Add a camera group
+        PerspectiveCamera camera = new PerspectiveCamera(true);
+        new CameraManager(camera, pane3D, root3D);
+
+        // Add point light
+        PointLight light = new PointLight(Color.WHITE);
+        light.setTranslateX(-180);
+        light.setTranslateY(-90);
+        light.setTranslateZ(-120);
+        light.getScope().addAll(root3D);
+        root3D.getChildren().add(light);
+
+        // Add ambient light
+        AmbientLight ambientLight = new AmbientLight(Color.WHITE);
+        ambientLight.getScope().addAll(root3D);
+        root3D.getChildren().add(ambientLight);
+
+        // Create scene
+        SubScene subscene = new SubScene(root3D, 472, 556, true, SceneAntialiasing.BALANCED);
+        subscene.setCamera(camera);
+        subscene.setFill(Color.GREY);
+        pane3D.getChildren().addAll(subscene);
+    	
+    	description.setEditable(false);
+    	precision.setText("3");
+    	champRecherche.setText("Delphinidae");
+    	
+    	ArrayList<Pair<Integer, Region>> signalementsJsonFile = Json.JsonFile("Delphinidae.Json") ;
+    	
+    	int max = signalementsJsonFile.get(0).getKey();
+		
+		L6.setText("< " + computeLegend(max)[0]);
+		L5.setText("< " + computeLegend(max)[1]);
+		L4.setText("< " + computeLegend(max)[2]);
+		L3.setText("< " + computeLegend(max)[3]);
+		L2.setText("< " + computeLegend(max)[4]);
+		L1.setText("< " + computeLegend(max)[5]);
+		
+		StringBuilder donnee = new StringBuilder();
+		donnee.append("nombre d'occurence | point 3D \n");
+	
+		for (Pair<Integer,Region> signalement : signalementsJsonFile) {
+		
+			final PhongMaterial material = new PhongMaterial();
+		
+			if(signalement.getKey() <= computeLegend(max)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+			else if(signalement.getKey() <= computeLegend(max)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
+			else if(signalement.getKey() <= computeLegend(max)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+			else if(signalement.getKey() <= computeLegend(max)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+			else if(signalement.getKey() <= computeLegend(max)[4]) {material.setDiffuseColor(new Color(1.0, 0.5, 0.0, 0.1));}
+			else if(signalement.getKey() <= computeLegend(max)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+		
+			Region region = signalement.getValue();
+		
+			AddQuadrilateral(earth, region.getPoints()[2], region.getPoints()[1], region.getPoints()[0], region.getPoints()[3], material);
+			
+			donnee.append("\n" + signalement.getKey().toString() + "\n"
+    		+"\t" + region.getPoints()[0] +"\n\t" + region.getPoints()[1] + 
+    		"\n\t" + region.getPoints()[2]+ "\n\t" + region.getPoints()[3]);
+		}
+		description.setText(donnee.toString());
+    	
+  
         
         //Auto completion 
         champRecherche.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -188,7 +254,6 @@ public class EarthController {
         combo.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent event) {	
-                	
         			champRecherche.setText(combo.getSelectionModel().getSelectedItem());
         	}
         });
@@ -201,9 +266,7 @@ public class EarthController {
         		
         	if(precision.getText().matches("[2-4]")) {
         		
-        		System.out.println(earth.getChildren());
         		earth.getChildren().subList(1, earth.getChildren().size()).clear();
-        		System.out.println(earth.getChildren());
     		
         		ArrayList<Pair<Integer, Region>> signalements;
         		
@@ -213,7 +276,6 @@ public class EarthController {
 	        			System.out.println(dateDebut.getValue());
 	        			
 	        			if(dateFin.getValue() !=null) {
-	        				System.out.println(dateFin.getValue());
 	        				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), dateFin.getValue());	
 	        			}
 	        			else { signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(), Integer.valueOf(precision.getText()), dateDebut.getValue(), LocalDate.now());
@@ -311,65 +373,60 @@ public class EarthController {
 	                	public void handle(long currentNanoTime) {
 	                		
 	                		double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-	                		//System.out.println(annee2);
+
 	    	        		if(annee2>dateFin.getValue().getYear() | pause==true | stop==true) {
 	    	        			if(annee2>dateFin.getValue().getYear()) {
 	    	        				nbPas=0;
 	    	        			}
-	    	        			/*if(stop==true) {
-	    	        				
-	    	        			}*/
 	    	        			this.stop();
 	    	        		}
 	    	        		else if(t%13<=0.1) {
 	    	        			
 	    	        			earth.getChildren().subList(1, earth.getChildren().size()).clear();
-	                			System.out.println(annee1 +" "+ annee2);
+	               
 	                			
-	                				signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(),
-	            						Integer.valueOf(precision.getText()),
-	            						LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()),
-	            						LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
+	                			signalements = Json.nbSignalementsRegionsDate(champRecherche.getText(),
+	            					Integer.valueOf(precision.getText()),
+	            					LocalDate.of(annee1, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()),
+	            					LocalDate.of(annee2, dateDebut.getValue().getMonthValue(), dateDebut.getValue().getDayOfMonth()));
 	                				
-	                				int max = signalements.get(0).getKey();
+	                			int max = signalements.get(0).getKey();
 	                				
-	                				L6.setText("< " + computeLegend(max)[0]);
-	                    			L5.setText("< " + computeLegend(max)[1]);
-	                    			L4.setText("< " + computeLegend(max)[2]);
-	                    			L3.setText("< " + computeLegend(max)[3]);
-	                    			L2.setText("< " + computeLegend(max)[4]);
-	                    			L1.setText("< " + computeLegend(max)[5]);
+	                			L6.setText("< " + computeLegend(max)[0]);
+	                    		L5.setText("< " + computeLegend(max)[1]);
+	                    		L4.setText("< " + computeLegend(max)[2]);
+	                    		L3.setText("< " + computeLegend(max)[3]);
+	                    		L2.setText("< " + computeLegend(max)[4]);
+	                    		L1.setText("< " + computeLegend(max)[5]);
 	                				
-	                				StringBuilder donnee = new StringBuilder();
-	        	        			donnee.append("nombre d'occurence | annee | point 3D \n");
+	                			StringBuilder donnee = new StringBuilder();
+	        	        		donnee.append("nombre d'occurence | annee | point 3D \n");
 	                			
-		                			for (Pair<Integer,Region> signalement : signalements) {
+		                		for (Pair<Integer,Region> signalement : signalements) {
 
-		    	        				final PhongMaterial material = new PhongMaterial();
+		    	        			final PhongMaterial material = new PhongMaterial();
 		    	        			
-		    	        				if(signalement.getKey() <= computeLegend(max)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
-		    	        				else if(signalement.getKey() <= computeLegend(max)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
-		    	        				else if(signalement.getKey() <= computeLegend(max)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
-		    	        				else if(signalement.getKey() <= computeLegend(max)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
-		    	        				else if(signalement.getKey() <= computeLegend(max)[4]) {material.setDiffuseColor(new Color(1.0, 0.4, 0.0, 0.3));}
-		    	        				else if(signalement.getKey() <= computeLegend(max)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
+		    	        			if(signalement.getKey() <= computeLegend(max)[0]) {material.setDiffuseColor(new Color(0.0, 0.0, 0.5, 0.3));}
+		    	        			else if(signalement.getKey() <= computeLegend(max)[1]) {material.setDiffuseColor(new Color(0.0, 1.0, 1.0, 0.1));}
+		    	        			else if(signalement.getKey() <= computeLegend(max)[2]) {material.setDiffuseColor(new Color(0.0, 0.5, 0.0, 0.1));}
+		    	        			else if(signalement.getKey() <= computeLegend(max)[3]) {material.setDiffuseColor(new Color(1.0, 1.0, 0.0, 0.1));}
+		    	        			else if(signalement.getKey() <= computeLegend(max)[4]) {material.setDiffuseColor(new Color(1.0, 0.4, 0.0, 0.3));}
+		    	        			else if(signalement.getKey() <= computeLegend(max)[5]) {material.setDiffuseColor(new Color(0.5, 0.0, 0.0, 0.1));}
 		    	        			
-		    	        				Region region = signalement.getValue();
+		    	        			Region region = signalement.getValue();
 		    	        			
-		    	        				AddBarreHistogrammeAnimation(earth,signalement,max,material);
+		    	        			AddBarreHistogrammeAnimation(earth,signalement,max,material);
 		    	        				
-		    	        				donnee.append("\n" + signalement.getKey().toString() + " entre : " + annee1 + "-" + annee2 + "\n"
+		    	        			donnee.append("\n" + signalement.getKey().toString() + " entre : " + annee1 + "-" + annee2 + "\n"
 		    	    	    	        		+"\t" + region.getPoints()[0] +"\n\t" + region.getPoints()[1] + 
 		    	    	    	        		"\n\t" + region.getPoints()[2]+ "\n\t" + region.getPoints()[3]);
-		            				}
-		                			
-	    	        				description.setText(donnee.toString());
-	    	        				nbPas=nbPas+1;
-		                			annee1=annee1+5;
-		            				annee2=annee2+5;
+		            			}	
+	    	        			description.setText(donnee.toString());
+	    	        			nbPas=nbPas+1;
+		                		annee1=annee1+5;
+		            			annee2=annee2+5;
 	                		}
-	                	}
-	                	
+	                	}	
 	                };
 	                timer.start(); 
         		}
@@ -395,20 +452,7 @@ public class EarthController {
         		dateFin.getEditor().clear();
         	}
         });
-        
-        /*dateDebut.setOnAction(new EventHandler<ActionEvent>() {
-        	@Override
-        	public void handle(ActionEvent event) {	
-        			nbPas=0;
-        	}
-        });
-        
-        dateFin.setOnAction(new EventHandler<ActionEvent>() {
-        	@Override
-        	public void handle(ActionEvent event) {	
-        			nbPas=0;
-        	}
-        });*/
+
        
         root3D.addEventHandler(MouseEvent.ANY, event ->{
       		if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {
@@ -417,34 +461,33 @@ public class EarthController {
       			Point3D spaceCoord = pickResult.getIntersectedPoint();
       			
       			displayPoint3D(spaceCoord,root3D);
-      			System.out.println(champRecherche.getText());
       			Point2D geoCoord = SpaceCoordToGeoCoord(spaceCoord);
       			String geohash = GeoHashHelper.getGeohash(new Location("selectedGeoHash", geoCoord.getX(), geoCoord.getY()));
       			geohash = geohash.substring(0, 2);
-      			System.out.println(geohash);
       			
       			ArrayList<Signalement> signalements = Json.rechercherSignalements(champRecherche.getText(), geohash);
-      			System.out.println(signalements);
       			
       			StringBuilder sb = new StringBuilder();
       			ArrayList<String> noms = new ArrayList<String>();
       			
       			for(Signalement signalement : signalements) {
       				sb.append(signalement.toString());
-      				noms.add(signalement.getscientificName());
+      				if(noms.contains(signalement.getscientificName())==false) {
+          				noms.add(signalement.getscientificName());
+      				}
       			}
       			
       			ObservableList<String> items = FXCollections.observableArrayList(noms);
       			listeEspeces.setItems(items);
       			description.setText(sb.toString());
       			
-      			Alert alert = new Alert(AlertType.INFORMATION);
+      			/*Alert alert = new Alert(AlertType.INFORMATION);
         		alert.setTitle("information sur la zone");
         		alert.setHeaderText("Espece présente dans la Zone");
         		alert.setResizable(true);
         		alert.setContentText(sb.toString());
         		alert.initModality(Modality.NONE);
-        		alert.showAndWait();
+        		alert.showAndWait();*/
       		}
       	});
         
@@ -455,48 +498,11 @@ public class EarthController {
         		combo.getSelectionModel().select(null);
         	}
         });
-        
-        // Load geometry
-      	ObjModelImporter objImporter = new ObjModelImporter();
-      	
-      	try {
-      		URL modelUrl = this.getClass().getResource("Earth/earth.obj");
-      		objImporter.read(modelUrl);
-      	}
-      	catch (ImportException e) {
-      		System.out.println(e.getMessage());
-      	}
-      	
-      	MeshView[] meshViews = objImporter.getImport();
-      	earth = new Group(meshViews);
-      	earth.setId("id");
-      	root3D.getChildren().add(earth);
-        root3D.setFocusTraversable(true);
-
-        // Add a camera group
-        PerspectiveCamera camera = new PerspectiveCamera(true);
-        new CameraManager(camera, pane3D, root3D);
-
-        // Add point light
-        PointLight light = new PointLight(Color.WHITE);
-        light.setTranslateX(-180);
-        light.setTranslateY(-90);
-        light.setTranslateZ(-120);
-        light.getScope().addAll(root3D);
-        root3D.getChildren().add(light);
-
-        // Add ambient light
-        AmbientLight ambientLight = new AmbientLight(Color.WHITE);
-        ambientLight.getScope().addAll(root3D);
-        root3D.getChildren().add(ambientLight);
-
-        // Create scene
-        SubScene subscene = new SubScene(root3D, 472, 556, true, SceneAntialiasing.BALANCED);
-        subscene.setCamera(camera);
-        subscene.setFill(Color.GREY);
-        pane3D.getChildren().addAll(subscene);
 
     }
+    
+    
+    
     
     public void displayPoint(Group parent, String name, float latitude, float longitude) {
 
@@ -531,6 +537,11 @@ public class EarthController {
                           xVec.getZ(), yVec.getZ(), zVec.getZ(), from.getZ());
     }
     
+    /**
+     * Fonction parmettant d'échelonner la légende
+     * @param max la valeur max prise par la légende
+     * @return les valeurs de légende
+     */
     public static int[] computeLegend(int max) {
 
     	int pas = max/6;
@@ -571,7 +582,11 @@ public class EarthController {
     	return new Point2D(lat,lon);
     }
 
-    
+    /**
+     * Fonction permettant de calculer le centre d'une zone pour centrer les barres d'histogramme
+     * @param signalement
+     * @return
+     */
     public Point3D calculerCentre(Pair<Integer,Region> signalement) {
     	
     	Point3D centre = signalement.getValue().getPoints()[0].midpoint(signalement.getValue().getPoints()[2]);
@@ -579,40 +594,35 @@ public class EarthController {
     	return centre;
     }
     
-    /*private void AddBarreHistogramme(Group parent, Pair<Integer,Region> signalement, PhongMaterial material) {
-    	
-    	Point3D from = signalement.getValue().getPoints()[0];
-    	Point3D to = Point3D.ZERO;
-    	Point3D yDir = new Point3D(0, 1, 0);
-    	
-        Box box = new Box(0.01f,0.01f,0.0002f*signalement.getKey());
-        box.setTranslateZ(-box.getDepth()/2);
-        box.setMaterial(material);
-
-        Affine affine = new Affine();
-        affine.append(lookAt(from,to,yDir));
-        
-        Group group = new Group();
-        group.getChildren().add(box);
-        
-        group.getTransforms().setAll(affine);
-        parent.getChildren().add(group);
-    }*/
-    
+    /**
+     * Fonction affichant des barres d'histogrammes qui augmentent progressivement
+     * @param parent le parent
+     * @param signalement un signalement
+     * @param max le nombre d'occurrence maximal pour échelonner la taille des barres d'histogrammes
+     * @param material 
+     */
     private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, int max, PhongMaterial material) {
-    	
-    	
-    	
+
     	Point3D from = calculerCentre(signalement);// signalement.getValue().getPoints()[0];
     	Point3D to = Point3D.ZERO;
     	Point3D yDir = new Point3D(0, 1, 0);
     	
-        Box box = new Box(0.01f,0.01f,0.01f);
+    	float cote;
+    	
+    	if(Integer.valueOf(precision.getText())==4) {
+    		cote=0.005f;
+    	}
+    	else if(Integer.valueOf(precision.getText())==3) {
+			cote=0.015f;
+		}
+    	else {
+    		cote=0.05f;
+    	}
+    	
+        Box box = new Box(cote,cote,0.01f);
         box.setMaterial(material);
-        
-        
  
-        float n = 0.0001f*signalement.getKey()*8000/max;
+        float n = 0.0001f*signalement.getKey()*8000/max; //échelonnage
         
         final long startNanoTime = System.nanoTime();
         

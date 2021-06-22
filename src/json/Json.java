@@ -112,7 +112,7 @@ public class Json {
 			String jsonText = readAll(rd);
 			JSONObject json = new JSONObject(jsonText);
 			
-			for(int i=0 ; i<json.getJSONArray("features").length() ; i++) {
+			for(int i=0 ; i<json.getJSONArray("features").length() ; i++) { 
 
 				int nb=json.getJSONArray("features").getJSONObject(i).getJSONObject("properties").getInt("n");
 
@@ -245,8 +245,7 @@ public class Json {
 						  recordedBy(json,i),
 						  species(json,i));
 				
-			signalements.add(signalement);
-			
+				signalements.add(signalement);		
 		}
 		return signalements;
 	}
@@ -345,11 +344,13 @@ public class Json {
 		ArrayList<String> resultat5 = completerNoms("delphi");
 		System.out.println(resultat5.get(0));*/
 		
-		//ArrayList<Pair<Integer, Region>> resultat6=JsonFile("Delphinidae.json");
+		ArrayList<Pair<Integer, Region>> resultat6=JsonFile("Delphinidae.json");
 		//System.out.println(resultat6.get(0));
-		//System.out.println(resultat6);
-		//System.out.println(resultat6);
-		
+		System.out.println(resultat6);
+		/*ArrayList<Integer> liste = new ArrayList<Integer>();
+		liste.add(3);
+		liste.add(4);
+		System.out.println(liste);*/
 	}
 	
 }

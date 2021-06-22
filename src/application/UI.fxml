@@ -16,14 +16,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="957.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="1021.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EarthController">
    <center>
-      <Pane fx:id="pane3D" prefHeight="556.0" prefWidth="472.0" BorderPane.alignment="CENTER" />
+      <Pane fx:id="pane3D" prefHeight="604.0" prefWidth="419.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
-      <HBox prefHeight="543.0" prefWidth="495.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="604.0" prefWidth="632.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="500.0" prefWidth="204.0">
+            <VBox prefHeight="584.0" prefWidth="271.0">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="248.0" text="Recherche">
                      <opaqueInsets>
@@ -43,11 +43,11 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </TextField>
-                  <ComboBox fx:id="combo" prefHeight="25.0" prefWidth="215.0" />
+                  <ComboBox fx:id="combo" prefHeight="25.0" prefWidth="261.0" />
                   <HBox prefHeight="21.0" prefWidth="206.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="86.0" text="Date début" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="68.0" text="Date fin " />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="93.0" text="Date fin " />
                      </children>
                   </HBox>
                   <HBox fx:id="calendrier" prefHeight="33.0" prefWidth="206.0">
@@ -58,7 +58,7 @@
                   </HBox>
                   <HBox prefHeight="203.0" prefWidth="196.0">
                      <children>
-                        <VBox prefHeight="247.0" prefWidth="192.0">
+                        <VBox prefHeight="203.0" prefWidth="264.0">
                            <children>
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
@@ -83,20 +83,20 @@
                                  </children>
                               </HBox>
                               <Label text="Liste des epèces" />
-                              <ListView fx:id="listeEspeces" prefHeight="285.0" prefWidth="140.0" />
+                              <ListView fx:id="listeEspeces" prefHeight="285.0" prefWidth="177.0" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
                   <Separator prefHeight="15.0" prefWidth="192.0" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="3.0" prefWidth="192.0" text="Légendes">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="22.0" prefWidth="260.0" text="Légendes">
                      <padding>
                         <Insets top="5.0" />
                      </padding></Label>
                   <Separator prefWidth="200.0" />
-                  <HBox prefHeight="84.0" prefWidth="206.0">
+                  <HBox prefHeight="95.0" prefWidth="294.0">
                      <children>
-                        <VBox prefHeight="72.0" prefWidth="100.0">
+                        <VBox prefHeight="85.0" prefWidth="131.0">
                            <children>
                               <HBox prefHeight="26.0" prefWidth="100.0">
                                  <children>
@@ -181,7 +181,7 @@
                         <Insets bottom="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="192.0" text="Valider">
+                  <Button fx:id="btnValider" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="37.0" prefWidth="266.0" text="Valider">
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
@@ -192,7 +192,10 @@
                   <HBox alignment="CENTER" prefHeight="28.0" prefWidth="174.0">
                      <children>
                       <Button fx:id="btnLecture" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Lecture" />
-                        <Button fx:id="btnPause" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Pause" />
+                        <Button fx:id="btnPause" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Pause">
+                           <HBox.margin>
+                              <Insets left="15.0" right="15.0" />
+                           </HBox.margin></Button>
                         <Button fx:id="btnStop" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Stop" />
                      </children>
                      <padding>
@@ -213,10 +216,10 @@
                   <Insets left="10.0" />
                </padding>
             </VBox>
-            <VBox prefHeight="543.0" prefWidth="272.0">
+            <VBox prefHeight="604.0" prefWidth="344.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="33.0" prefWidth="165.0" text="Descriptions" />
-                  <TextArea fx:id="description" prefHeight="504.0" prefWidth="257.0">
+                  <Label alignment="CENTER" prefHeight="33.0" prefWidth="330.0" text="Descriptions" />
+                  <TextArea fx:id="description" prefHeight="558.0" prefWidth="318.0">
                      <VBox.margin>
                         <Insets left="5.0" right="10.0" />
                      </VBox.margin></TextArea>

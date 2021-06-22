@@ -179,7 +179,7 @@ public class EarthController {
         root3D.getChildren().add(ambientLight);
 
         // Create scene
-        SubScene subscene = new SubScene(root3D, 472, 556, true, SceneAntialiasing.BALANCED);
+        SubScene subscene = new SubScene(root3D, 400, 604, true, SceneAntialiasing.BALANCED);
         subscene.setCamera(camera);
         subscene.setFill(Color.GREY);
         pane3D.getChildren().addAll(subscene);
@@ -230,10 +230,9 @@ public class EarthController {
         	@Override
         	public void handle(KeyEvent event) {	
         		
-                	//TextFields.bindAutoCompletion(champRecherche, Json.completerNoms(champRecherche.getText()));
         			ObservableList<String> items = FXCollections.observableArrayList(Json.completerNoms(champRecherche.getText()));
             		combo.setItems(items);
-            		//TextFields.bindAutoCompletion(champRecherche, items);
+ 
             		
             		stop=false;
             		
@@ -243,7 +242,6 @@ public class EarthController {
             			alert.setTitle("Message d'alerte");
             			alert.setHeaderText(null);
             			alert.setContentText("Nom d'espèce non repertoriée");
-            			//alert.initModality(Modality.NONE);
             			alert.initModality(Modality.APPLICATION_MODAL);
 
             			alert.showAndWait();	
@@ -481,13 +479,7 @@ public class EarthController {
       			listeEspeces.setItems(items);
       			description.setText(sb.toString());
       			
-      			/*Alert alert = new Alert(AlertType.INFORMATION);
-        		alert.setTitle("information sur la zone");
-        		alert.setHeaderText("Espece présente dans la Zone");
-        		alert.setResizable(true);
-        		alert.setContentText(sb.toString());
-        		alert.initModality(Modality.NONE);
-        		alert.showAndWait();*/
+      			
       		}
       	});
         
@@ -603,7 +595,7 @@ public class EarthController {
      */
     private void AddBarreHistogrammeAnimation(Group parent, Pair<Integer,Region> signalement, int max, PhongMaterial material) {
 
-    	Point3D from = calculerCentre(signalement);// signalement.getValue().getPoints()[0];
+    	Point3D from = calculerCentre(signalement);
     	Point3D to = Point3D.ZERO;
     	Point3D yDir = new Point3D(0, 1, 0);
     	

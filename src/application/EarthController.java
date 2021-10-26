@@ -324,7 +324,7 @@ public class EarthController {
     					donnee.append("nombre d'occurence | annee | point 3D \n");
         			
     					for (Object[] intervalle : intervalles) {
-    						donnee.append("\n" + intervalle[0] + " / " + intervalle[1]);
+    						donnee.append("\n" + intervalle[0] + " / " + intervalle[1] +"\n");
     						signalements=(ArrayList<Pair<Integer, Region>>) intervalle[2];
         				
         					for (Pair<Integer,Region> signalement : signalements) {
